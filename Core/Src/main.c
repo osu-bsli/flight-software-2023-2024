@@ -56,6 +56,13 @@ const osThreadAttr_t airbrakeTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
+/* Definitions for telemetryTask */
+osThreadId_t telemetryTaskHandle;
+const osThreadAttr_t telemetryTask_attributes = {
+  .name = "telemetryTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -64,6 +71,7 @@ const osThreadAttr_t airbrakeTask_attributes = {
 void SystemClock_Config(void);
 void startSensorTask(void *argument);
 void startAirbrakeTask(void *argument);
+void startTelemetryTask(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -130,6 +138,9 @@ int main(void)
 
   /* creation of airbrakeTask */
   airbrakeTaskHandle = osThreadNew(startAirbrakeTask, NULL, &airbrakeTask_attributes);
+
+  /* creation of telemetryTask */
+  telemetryTaskHandle = osThreadNew(startTelemetryTask, NULL, &telemetryTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -242,6 +253,24 @@ void startAirbrakeTask(void *argument)
     osDelay(1);
   }
   /* USER CODE END startAirbrakeTask */
+}
+
+/* USER CODE BEGIN Header_startTelemetryTask */
+/**
+* @brief Function implementing the telemetryTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_startTelemetryTask */
+void startTelemetryTask(void *argument)
+{
+  /* USER CODE BEGIN startTelemetryTask */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END startTelemetryTask */
 }
 
 /**
