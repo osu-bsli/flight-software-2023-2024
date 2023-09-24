@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "fc_adxl375.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
