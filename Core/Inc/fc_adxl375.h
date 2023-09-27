@@ -43,6 +43,18 @@
 #define FC_ADXL375_REGISTER_FIFO_CTL         0x38u;
 #define FC_ADXL375_REGISTER_FIFO_STATUS      0x39u;
 
+/* struct */
+
+struct fc_adxl375 {
+	 I2C_HandleTypeDef *i2c_handle;
+
+	 float acceleration_x;
+	 float acceleration_y;
+	 float acceleration_z;
+
+	 float temperature; /* C */
+};
+
 /* functions */
 
 #endif /* INC_FC_ADXL375_H_ */
