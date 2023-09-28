@@ -57,7 +57,7 @@ struct fc_adxl375 {
 
 /* functions */
 
-g
+
 
 HAL_StatusTypeDef fc_adxl375_readtemperature( fc_adxl375 *dev);
 HAL_StatusTypeDef fc_adxl375_readacceleations( fc_adxl375 *dev);
