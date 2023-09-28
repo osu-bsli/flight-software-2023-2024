@@ -56,6 +56,7 @@ struct fc_adxl375 {
 };
 
 /* functions */
+HAL_StatusTypeDef fc_adxl375_readregister(struct fc_adxl375 *device, uint8_t register, uint8_t *data);
 
 
 
