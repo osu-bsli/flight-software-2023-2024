@@ -56,7 +56,7 @@ struct fc_adxl375 {
 };
 
 /* functions */
-
+uint8_t adxl375_initialise( adxl375 *device, I2C_HandleTypeDef *i2c_Handle );
 
 
 HAL_StatusTypeDef fc_adxl375_readtemperature( fc_adxl375 *dev);
