@@ -56,15 +56,14 @@ struct fc_adxl375 {
 };
 
 /* functions */
-uint8_t adxl375_initialise( adxl375 *device, I2C_HandleTypeDef *i2c_Handle );
+uint8_t adxl375_initialize(struct fc_adxl375 *device, I2C_HandleTypeDef *i2c_handle);
 
 
-HAL_StatusTypeDef fc_adxl375_readtemperature( fc_adxl375 *dev);
-HAL_StatusTypeDef fc_adxl375_readacceleations( fc_adxl375 *dev);
+HAL_StatusTypeDef fc_adxl375_readtemperature(struct fc_adxl375 *device);
+HAL_StatusTypeDef fc_adxl375_readacceleations(struct fc_adxl375 *device);
 
-HAL_StatusTypeDef fc_adxl375_readregister (fc_adxl375 * dev, uint8_t register, uint8_t * data);
-
-HAL_StatusTypeDef fc_adxl375_readregister(struct fc_adxl375 *device, uint8_t register, uint8_t *data);
+HAL_StatusTypeDef fc_adxl375_readregister(struct fc_adxl375 * device, uint8_t register, uint8_t * data);
+HAL_StatusTypeDef fc_adxl375_readregisters(struct fc_adxl375 *device, uint8_t register, uint8_t *data);
 HAL_StatusTypeDef fc_adxl375_writeregister(struct fc_adxl375 *device, uint8_t register, uint8_t *data);
 
 #endif /* INC_FC_ADXL375_H_ */
