@@ -57,6 +57,11 @@ struct fc_adxl375 {
 
 /* functions */
 
+g
+
+HAL_StatusTypeDef fc_adxl375_readtemperature( fc_adxl375 *dev);
+HAL_StatusTypeDef fc_adxl375_readacceleations( fc_adxl375 *dev);
+
 HAL_StatusTypeDef fc_adxl375_writeregister(struct fc_adxl375 *device, uint8_t register, uint8_t *data);
 
 #endif /* INC_FC_ADXL375_H_ */
