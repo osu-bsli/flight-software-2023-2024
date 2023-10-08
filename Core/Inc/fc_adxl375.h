@@ -8,6 +8,8 @@
 #ifndef INC_FC_ADXL375_H_
 #define INC_FC_ADXL375_H_
 
+#include "stm32h7xx_hal.h"
+
 /* i2c constants */
 #define FC_ADXL375_I2C_DEVICE_ID     0x1Du; /* (pg. 18) if ALT_ADDRESS pin is low, these change */
 #define FC_ADXL375_I2C_WRITE_ADDRESS 0x3Au;
