@@ -12,6 +12,7 @@ uint8_t adxl375_initialize(struct fc_adxl375 *device, I2C_HandleTypeDef *i2c_Han
 
 }
 
+<<<<<<< HEAD
 
 
 HAL_StatusTypeDef fc_adxl375_readregisters(struct fc_adxl375 *device, uint8_t reg, uint8_t *data, uint8_t length) {
@@ -20,4 +21,12 @@ HAL_StatusTypeDef fc_adxl375_readregisters(struct fc_adxl375 *device, uint8_t re
 
 HAL_StatusTypeDef fc_adxl375_writeregister(struct fc_adxl375 *device, uint8_t reg, uint8_t *data) {
 	return HAL_I2C_Mem_Write(device->i2c_handle, FC_ADXL375_I2C_DEVICE_ID, reg, sizeof(reg), data, 1, 100);
+=======
+HAL_StatusTypeDef fc_adxl375_readregister(struct fc_adxl375 *device, uint8_t reg, uint8_t *data) {
+	return HAL_I2C_Mem_Read(device->i2c_handle, FC_ADXL375_I2C_DEVICE_ID, reg, sizeof(reg), data, sizeof(data), 100);
+}
+
+HAL_StatusTypeDef fc_adxl375_writeregister(struct fc_adxl375 *device, uint8_t reg, uint8_t *data) {
+	return HAL_I2C_Mem_Write(device->i2c_handle, FC_ADXL375_I2C_DEVICE_ID, reg, sizeof(reg), data, sizeof(data), 100);
+>>>>>>> 9e207eaee3ecbf6ca46d12bb8d27181f99d2a003
 }
