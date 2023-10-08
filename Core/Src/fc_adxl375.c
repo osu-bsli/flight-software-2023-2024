@@ -8,16 +8,29 @@
 #include "fc_adxl375.h"
 #include "stm32h7xx_hal.h"
 
-uint8_t adxl375_initialize(struct fc_adxl375 *device, I2C_HandleTypeDef *i2c_Handle) {
+uint8_t adxl375_initialize(struct fc_adxl375 *device, I2C_HandleTypeDef *i2c_handle) {
 
 	/* Set struct parameters */
-	dev->i2c_handle		= i2c_handle;
+	device->i2c_handle		= i2c_handle;
 
-	dev->acceleration_x = 0.0f;
-	dev->acceleration_y = 0.0f;
-	dev->acceleration_z = 0.0f;
+	device->acceleration_x = 0.0f;
+	device->acceleration_y = 0.0f;
+	device->acceleration_z = 0.0f;
 
-	dev->temperature    = 0.0f;
+	device->temperature    = 0.0f;
+
+	HAL_StatusTypeDef status;
+	uint8_t reg_Data;
+
+	status = fc_adxl375_readregister(device, FC_ADXL375_REGISTER_DEVID, &reg_Data);
+	if (status != HAL_OK) {
+		return 42;
+	}
+	if (reg_Data != FC_ADXL375_I2C_DEVICE_ID) {
+		return 255;
+	}
+
+	return 0;
 }
 
 HAL_StatusTypeDef fc_adxl375_readregister(struct fc_adxl375 *device, uint8_t reg, uint8_t *data) {
