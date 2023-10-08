@@ -17,7 +17,7 @@ HAL_StatusTypeDef fc_adxl375_readregister(struct fc_adxl375 *device, uint8_t reg
 }
 
 HAL_StatusTypeDef fc_adxl375_readregisters(struct fc_adxl375 *device, uint8_t reg, uint8_t *data, uint8_t length) {
-	return HAL_I2C_Mem_Read(device->i2c_Handle, FC_ADXL375_I2C_DEVICE_ADDR, reg, I2C_MEMADD_SIZE_8BIT, data, length, 100);
+	return HAL_I2C_Mem_Read(device->i2c_handle, FC_ADXL375_I2C_DEVICE_ADDR, reg, sizeof(reg), data, length, 100);
 }
 
 HAL_StatusTypeDef fc_adxl375_writeregister(struct fc_adxl375 *device, uint8_t reg, uint8_t *data) {
