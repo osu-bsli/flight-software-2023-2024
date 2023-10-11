@@ -10,24 +10,29 @@
 
 uint8_t adxl375_initialize(struct fc_adxl375 *device, I2C_HandleTypeDef *i2c_handle) {
 
-	/* Set struct parameters */
-	device->i2c_handle		= i2c_handle;
-
+	/* reset struct */
+	device->i2c_handle     = i2c_handle;
 	device->acceleration_x = 0.0f;
 	device->acceleration_y = 0.0f;
 	device->acceleration_z = 0.0f;
-
 	device->temperature    = 0.0f;
 
+	/* check that the device id is correct */
 	HAL_StatusTypeDef status;
-	uint8_t reg_Data;
-
-	status = fc_adxl375_readregister(device, FC_ADXL375_REGISTER_DEVID, &reg_Data);
+	uint8_t data;
+	status = fc_adxl375_readregister(device, FC_ADXL375_REGISTER_DEVID, &data);
 	if (status != HAL_OK) {
 		return 42;
 	}
-	if (reg_Data != FC_ADXL375_I2C_DEVICE_ID) {
+	if (data != FC_ADXL375_I2C_DEVICE_ID) {
 		return 255;
+	}
+
+	/* set measure bit in POWER_CTL register (pg. 22) */
+	data = 0b00001000;
+	status = fc_adxl375_writeregister(device, FC_ADXL375_REGISTER_POWER_CTL, &data);
+	if (status != HAL_OK) {
+		return 42;
 	}
 
 	return 0;
