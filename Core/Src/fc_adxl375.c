@@ -8,7 +8,7 @@
 #include "fc_adxl375.h"
 #include "stm32h7xx_hal.h"
 
-uint8_t adxl375_initialize(struct fc_adxl375 *device, I2C_HandleTypeDef *i2c_handle) {
+int adxl375_initialize(struct fc_adxl375 *device, I2C_HandleTypeDef *i2c_handle) {
 
 	/* reset struct */
 	device->i2c_handle     = i2c_handle;
@@ -34,6 +34,41 @@ uint8_t adxl375_initialize(struct fc_adxl375 *device, I2C_HandleTypeDef *i2c_han
 	if (status != HAL_OK) {
 		return 42;
 	}
+
+	return 0;
+}
+
+int adxl375_process(struct fc_adxl375 *device) {
+
+	/* read raw acceleration data bytes */
+	uint8_t data[6]; /* DATAX0, X1, Y0, Y1, Z0, and Z1 registers (pg. 24) */
+	HAL_StatusTypeDef status = fc_adxl375_readregisters(device, FC_ADXL375_REGISTER_DATAX0, data, sizeof(data));
+	if (status != HAL_OK) {
+		return 255;
+	}
+
+	/* convert bytes to signed 16-bit values */
+	union { /* must use union for type-punning to avoid undefined behavior */
+		uint8_t bytes[2]; /* little-endian system, bytes[0] is least significant byte */
+		int16_t value;
+	} converter;
+
+	converter.bytes[0] = data[0]; /* DATAX0 is least significant byte (pg. 24) */
+	converter.bytes[1] = data[1];
+	int16_t raw_acceleration_x = converter.value;
+
+	converter.bytes[0] = data[2]; /* DATAY0 is least significant byte (pg. 24) */
+	converter.bytes[1] = data[3];
+	int16_t raw_acceleration_y = converter.value;
+
+	converter.bytes[0] = data[4]; /* DATAZ0 is least significant byte (pg. 24) */
+	converter.bytes[1] = data[5];
+	int16_t raw_acceleration_z = converter.value;
+
+	/* convert raw data to actual acceleration data */
+	device->acceleration_x = (float) raw_acceleration_x;
+	device->acceleration_y = (float) raw_acceleration_y;
+	device->acceleration_z = (float) raw_acceleration_z;
 
 	return 0;
 }
