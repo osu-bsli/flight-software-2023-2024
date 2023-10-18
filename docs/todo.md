@@ -17,4 +17,5 @@
 
 ## Storage
 - [ ] research SD card reader interface with STM32
+  - [ ] https://embetronicx.com/tutorials/microcontrollers/stm32/stm32-sd-card-interfacing-with-example/#:~:text=The%20SD%20Card%20is%20connected%20to%20the%20STM32,you%20give%20lesser%20than%20that%2C%20it%20won%E2%80%99t%20work.
 - [ ] reseach flash drive interface with STM32
