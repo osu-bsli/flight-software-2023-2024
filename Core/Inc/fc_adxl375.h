@@ -53,8 +53,6 @@ struct fc_adxl375 {
 	 float acceleration_x;
 	 float acceleration_y;
 	 float acceleration_z;
-
-	 float temperature; /* C */
 };
 
 /* functions */

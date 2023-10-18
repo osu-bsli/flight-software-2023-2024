@@ -15,7 +15,6 @@ int adxl375_initialize(struct fc_adxl375 *device, I2C_HandleTypeDef *i2c_handle)
 	device->acceleration_x = 0.0f;
 	device->acceleration_y = 0.0f;
 	device->acceleration_z = 0.0f;
-	device->temperature    = 0.0f;
 
 	/* check that the device id is correct */
 	HAL_StatusTypeDef status;
