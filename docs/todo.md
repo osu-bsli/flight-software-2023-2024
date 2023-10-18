@@ -8,3 +8,9 @@
 
 ## ADXL375 driver (accelerometer)
 - [ ] (dersu) use interrupts instead of blocking functions
+
+## MS5607 driver (barometer)
+- [ ] implement the code
+  - [ ] sketch out each function required
+  - [ ] brainstorm constants to define
+  - [ ] make header and c files
