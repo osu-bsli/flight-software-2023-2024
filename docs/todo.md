@@ -14,3 +14,7 @@
   - [ ] sketch out each function required
   - [ ] brainstorm constants to define
   - [ ] make header and c files
+
+## Storage
+- [ ] research SD card reader interface with STM32
+- [ ] reseach flash drive interface with STM32
