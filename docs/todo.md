@@ -18,4 +18,8 @@
   - [ ] figure out how to read data from sensor
 
 ## MAX-M8C-0 (gps) (https://www.digikey.com/en/products/detail/u-blox/MAX-M8C-0/6150635)
-We'll do this later
+
+## On-board storage
+- [ ] research SD card reader interface with STM32
+  - [ ] https://embetronicx.com/tutorials/microcontrollers/stm32/stm32-sd-card-interfacing-with-example/#:~:text=The%20SD%20Card%20is%20connected%20to%20the%20STM32,you%20give%20lesser%20than%20that%2C%20it%20won%E2%80%99t%20work.
+- [ ] reseach flash drive interface with STM32
