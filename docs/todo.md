@@ -14,3 +14,8 @@
   - [ ] sketch out each function required
   - [ ] brainstorm constants to define
   - [ ] make header and c files
+  - [ ] figure out how to initialize sensor
+  - [ ] figure out how to read data from sensor
+
+## MAX-M8C-0 (gps) (https://www.digikey.com/en/products/detail/u-blox/MAX-M8C-0/6150635)
+We'll do this later
