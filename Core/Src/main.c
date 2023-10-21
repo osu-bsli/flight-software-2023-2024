@@ -84,6 +84,16 @@ void startTelemetryTask(void *argument);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+/* interrupt handler, called when HAL_I2C_Mem_Read_IT() finishes */
+void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef *hi2c) {
+	/* TODO: do something */
+}
+
+/* interrupt handler, called whenever a HAL i2c function encounters an error */
+void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c) {
+	/* TODO: do something */
+}
+
 /* USER CODE END 0 */
 
 /**
