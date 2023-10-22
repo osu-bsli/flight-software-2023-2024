@@ -23,9 +23,14 @@
 
 ## MAX-M8C-0 (gps) (https://www.digikey.com/en/products/detail/u-blox/MAX-M8C-0/6150635)
 
+## BMI323 (imu)
+
 ## On-board storage
 - [ ] research SD card reader interface with STM32
   - SD Card STM32 interfacing tutorial: https://embetronicx.com/tutorials/microcontrollers/stm32/stm32-sd-card-interfacing-with-example/#:~:text=The%20SD%20Card%20is%20connected%20to%20the%20STM32,you%20give%20lesser%20than%20that%2C%20it%20won%E2%80%99t%20work.
   - SPI Overview: https://embetronicx.com/tutorials/tech_devices/spi-serial-peripheral-interface-protocol-basics/
   - https://01001000.xyz/2020-08-09-Tutorial-STM32CubeIDE-SD-card/
 - [ ] reseach flash drive interface with STM32
+
+## Communication Protocols
+- [ ] Determine which sensors will use which peripherals
