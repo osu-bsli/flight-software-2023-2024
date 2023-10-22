@@ -51,6 +51,7 @@
 struct fc_adxl375 {
 	 I2C_HandleTypeDef *i2c_handle; /* the i2c peripheral */
 	 osMutexId_t *i2c_mutex_handle; /* the mutex guarding the i2c peripheral */
+	 int *i2c_owner;                /* pointer to variable tracking who is using the i2c peripheral */
 	 int i2c_is_done;               /* i2c completion or error interrupt will set this to true, false otherwise */
 	 int i2c_is_error;              /* i2c error interrupt will set this to true, false otherwise */
 
@@ -60,15 +61,20 @@ struct fc_adxl375 {
 };
 
 /* functions */
-int fc_adxl375_initialize(struct fc_adxl375 *device, I2C_HandleTypeDef *i2c_handle, osMutexId_t *i2c_mutex_handle);
+int fc_adxl375_initialize(struct fc_adxl375 *device, I2C_HandleTypeDef *i2c_handle, osMutexId_t *i2c_mutex_handle, int *i2c_owner);
 int fc_adxl375_process(struct fc_adxl375 *device);
 
 /* Starts reading 1 byte from a register.
- * The value won't be ready until the HAL_I2C_MemTxCpltCallback() interrupt handler is called.
- *
- */
+ * The value won't be ready until the HAL_I2C_MemTxCpltCallback() interrupt handler is called. */
 HAL_StatusTypeDef fc_adxl375_readregister(struct fc_adxl375 *device, uint8_t reg, uint8_t *data);
+
+/* Starts reading multiple bytes from a register.
+ * Use this to read multiple contiguous registers in one go (aka "burst mode").
+ * The value won't be ready until the HAL_I2C_MemTxCpltCallback() interrupt handler is called. */
 HAL_StatusTypeDef fc_adxl375_readregisters(struct fc_adxl375 *device, uint8_t reg, uint8_t *data, uint8_t length);
+
+/* Starts writing 1 byte to a register.
+ * The value won't be ready until the HAL_I2C_MemRxCpltCallback() interrupt handler is called. */
 HAL_StatusTypeDef fc_adxl375_writeregister(struct fc_adxl375 *device, uint8_t reg, uint8_t *data);
 
 #endif /* INC_FC_ADXL375_H_ */

@@ -22,6 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "fc_common.h"
 #include "fc_adxl375.h"
 /* USER CODE END Includes */
 
@@ -97,9 +98,7 @@ void startTelemetryTask(void *argument);
 struct fc_adxl375 fc_adxl375;
 
 /* track who is using each i2c device, so interrupts know where to send data */
-#define FC_I2C_USER_FC_ADXL375 0
-#define FC_I2C_USER_ADXL375 1
-int fc_i2c1_user = FC_I2C_USER_FC_ADXL375; /* tracks who is using i2c1. both this and i2c1 itself are guarded by the "i2c1Mutex" mutex */
+int fc_i2c1_owner = FC_I2C_OWNER_FC_ADXL375; /* tracks who is using i2c1. both this and i2c1 itself are guarded by the "i2c1Mutex" mutex */
 
 /* interrupt handler, called when HAL_I2C_Mem_Write_IT() finishes */
 void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef *hi2c) {
@@ -107,11 +106,11 @@ void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef *hi2c) {
 	if (hi2c->Instance == I2C1) {
 
 		/* if this interrupt happened because `main.c` was using i2c1 */
-		if (fc_i2c1_user == FC_I2C_USER_FC_ADXL375) {
+		if (fc_i2c1_user == FC_I2C_OWNER_MAIN) {
 		}
 
 		/* if this interrupt happened because `fc_adxl375.c` was using i2c1 */
-		else if (fc_i2c1_user == FC_I2C_USER_ADXL375) {
+		else if (fc_i2c1_user == FC_I2C_OWNER_FC_ADXL375) {
 			fc_adxl375.i2c_is_done = 1;
 			fc_adxl375.i2c_is_error = 0;
 		}
@@ -124,11 +123,11 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c) {
 	if (hi2c->Instance == I2C1) {
 
 		/* if this interrupt happened because `main.c` was using i2c1 */
-		if (fc_i2c1_user == FC_I2C_USER_FC_ADXL375) {
+		if (fc_i2c1_user == FC_I2C_OWNER_MAIN) {
 		}
 
 		/* if this interrupt happened because `fc_adxl375.c` was using i2c1 */
-		else if (fc_i2c1_user == FC_I2C_USER_ADXL375) {
+		else if (fc_i2c1_user == FC_I2C_OWNER_FC_ADXL375) {
 			fc_adxl375.i2c_is_done = 1;
 			fc_adxl375.i2c_is_error = 0;
 		}
@@ -141,11 +140,11 @@ void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c) {
 	if (hi2c->Instance == I2C1) {
 
 		/* if this interrupt happened because `main.c` was using i2c1 */
-		if (fc_i2c1_user == FC_I2C_USER_FC_ADXL375) {
+		if (fc_i2c1_user == FC_I2C_OWNER_MAIN) {
 		}
 
 		/* if this interrupt happened because `fc_adxl375.c` was using i2c1 */
-		else if (fc_i2c1_user == FC_I2C_USER_ADXL375) {
+		else if (fc_i2c1_user == FC_I2C_OWNER_FC_ADXL375) {
 			fc_adxl375.i2c_is_done = 1;
 			fc_adxl375.i2c_is_error = 1;
 		}

@@ -6,10 +6,11 @@
  */
 
 #include "fc_adxl375.h"
+#include "fc_common.h"
 #include "stm32h7xx_hal.h"
 #include "cmsis_os.h"
 
-int fc_adxl375_initialize(struct fc_adxl375 *device, I2C_HandleTypeDef *i2c_handle, osMutexId_t *i2c_mutex_handle) {
+int fc_adxl375_initialize(struct fc_adxl375 *device, I2C_HandleTypeDef *i2c_handle, osMutexId_t *i2c_mutex_handle, int *i2c_owner) {
 
 	/* reset struct */
 	device->i2c_handle       = i2c_handle;
@@ -32,6 +33,9 @@ int fc_adxl375_initialize(struct fc_adxl375 *device, I2C_HandleTypeDef *i2c_hand
 	if (mutex_status != osOK) { /* TODO: better error handling */
 		return 100;
 	}
+
+	/* tell interrupt handler that we're using the i2c peripheral */
+	*device->i2c_owner = FC_I2C_OWNER_FC_ADXL375;
 
 	/* start i2c read */
 	status = fc_adxl375_readregister(device, FC_ADXL375_REGISTER_DEVID, &data);
@@ -71,6 +75,9 @@ int fc_adxl375_initialize(struct fc_adxl375 *device, I2C_HandleTypeDef *i2c_hand
 	if (mutex_status != osOK) { /* TODO: better error handling */
 		return 100;
 	}
+
+	/* tell interrupt handler that we're using the i2c peripheral */
+	*device->i2c_owner = FC_I2C_OWNER_FC_ADXL375;
 
 	/* start i2c write */
 	status = fc_adxl375_writeregister(device, FC_ADXL375_REGISTER_POWER_CTL, &data);
@@ -112,6 +119,9 @@ int fc_adxl375_process(struct fc_adxl375 *device) {
 	if (mutex_status != osOK) { /* TODO: better error handling */
 		return 100;
 	}
+
+	/* tell interrupt handler that we're using the i2c peripheral */
+	*device->i2c_owner = FC_I2C_OWNER_FC_ADXL375;
 
 	/* start i2c read */
 	HAL_StatusTypeDef status = fc_adxl375_readregisters(device, FC_ADXL375_REGISTER_DATAX0, data, sizeof(data));
