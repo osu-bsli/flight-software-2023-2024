@@ -27,7 +27,6 @@
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
-typedef StaticSemaphore_t osStaticMutexDef_t;
 /* USER CODE BEGIN PTD */
 
 /* USER CODE END PTD */
@@ -67,14 +66,6 @@ const osThreadAttr_t telemetryTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
-/* Definitions for i2c1Mutex */
-osMutexId_t i2c1MutexHandle;
-osStaticMutexDef_t i2c1MutexControlBlock;
-const osMutexAttr_t i2c1Mutex_attributes = {
-  .name = "i2c1Mutex",
-  .cb_mem = &i2c1MutexControlBlock,
-  .cb_size = sizeof(i2c1MutexControlBlock),
-};
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -106,11 +97,11 @@ void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef *hi2c) {
 	if (hi2c->Instance == I2C1) {
 
 		/* if this interrupt happened because `main.c` was using i2c1 */
-		if (fc_i2c1_user == FC_I2C_OWNER_MAIN) {
+		if (fc_i2c1_owner == FC_I2C_OWNER_MAIN) {
 		}
 
 		/* if this interrupt happened because `fc_adxl375.c` was using i2c1 */
-		else if (fc_i2c1_user == FC_I2C_OWNER_FC_ADXL375) {
+		else if (fc_i2c1_owner == FC_I2C_OWNER_FC_ADXL375) {
 			fc_adxl375.i2c_is_done = 1;
 			fc_adxl375.i2c_is_error = 0;
 		}
@@ -123,11 +114,11 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c) {
 	if (hi2c->Instance == I2C1) {
 
 		/* if this interrupt happened because `main.c` was using i2c1 */
-		if (fc_i2c1_user == FC_I2C_OWNER_MAIN) {
+		if (fc_i2c1_owner == FC_I2C_OWNER_MAIN) {
 		}
 
 		/* if this interrupt happened because `fc_adxl375.c` was using i2c1 */
-		else if (fc_i2c1_user == FC_I2C_OWNER_FC_ADXL375) {
+		else if (fc_i2c1_owner == FC_I2C_OWNER_FC_ADXL375) {
 			fc_adxl375.i2c_is_done = 1;
 			fc_adxl375.i2c_is_error = 0;
 		}
@@ -140,11 +131,11 @@ void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c) {
 	if (hi2c->Instance == I2C1) {
 
 		/* if this interrupt happened because `main.c` was using i2c1 */
-		if (fc_i2c1_user == FC_I2C_OWNER_MAIN) {
+		if (fc_i2c1_owner == FC_I2C_OWNER_MAIN) {
 		}
 
 		/* if this interrupt happened because `fc_adxl375.c` was using i2c1 */
-		else if (fc_i2c1_user == FC_I2C_OWNER_FC_ADXL375) {
+		else if (fc_i2c1_owner == FC_I2C_OWNER_FC_ADXL375) {
 			fc_adxl375.i2c_is_done = 1;
 			fc_adxl375.i2c_is_error = 1;
 		}
@@ -188,9 +179,6 @@ int main(void)
 
   /* Init scheduler */
   osKernelInitialize();
-  /* Create the mutex(es) */
-  /* creation of i2c1Mutex */
-  i2c1MutexHandle = osMutexNew(&i2c1Mutex_attributes);
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */

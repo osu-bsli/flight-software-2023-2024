@@ -50,7 +50,6 @@
 
 struct fc_adxl375 {
 	 I2C_HandleTypeDef *i2c_handle; /* the i2c peripheral */
-	 osMutexId_t *i2c_mutex_handle; /* the mutex guarding the i2c peripheral */
 	 int *i2c_owner;                /* pointer to variable tracking who is using the i2c peripheral */
 	 int i2c_is_done;               /* i2c completion or error interrupt will set this to true, false otherwise */
 	 int i2c_is_error;              /* i2c error interrupt will set this to true, false otherwise */
@@ -61,7 +60,7 @@ struct fc_adxl375 {
 };
 
 /* functions */
-int fc_adxl375_initialize(struct fc_adxl375 *device, I2C_HandleTypeDef *i2c_handle, osMutexId_t *i2c_mutex_handle, int *i2c_owner);
+int fc_adxl375_initialize(struct fc_adxl375 *device, I2C_HandleTypeDef *i2c_handle, int *i2c_owner);
 int fc_adxl375_process(struct fc_adxl375 *device);
 
 /* Starts reading 1 byte from a register.

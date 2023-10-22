@@ -10,11 +10,10 @@
 #include "stm32h7xx_hal.h"
 #include "cmsis_os.h"
 
-int fc_adxl375_initialize(struct fc_adxl375 *device, I2C_HandleTypeDef *i2c_handle, osMutexId_t *i2c_mutex_handle, int *i2c_owner) {
+int fc_adxl375_initialize(struct fc_adxl375 *device, I2C_HandleTypeDef *i2c_handle, int *i2c_owner) {
 
 	/* reset struct */
 	device->i2c_handle       = i2c_handle;
-	device->i2c_mutex_handle = i2c_mutex_handle;
 	device->i2c_is_done      = 0; /* TODO: probably needs to be volatile */
 	device->acceleration_x   = 0.0f;
 	device->acceleration_y   = 0.0f;
@@ -26,13 +25,6 @@ int fc_adxl375_initialize(struct fc_adxl375 *device, I2C_HandleTypeDef *i2c_hand
 
 	HAL_StatusTypeDef status;
 	uint8_t data;
-
-	/* take mutex guarding i2c peripheral */
-	osStatus mutex_status;
-	mutex_status = osMutexAcquire(device->i2c_mutex_handle, osWaitForever); /* TODO: don't wait forever */
-	if (mutex_status != osOK) { /* TODO: better error handling */
-		return 100;
-	}
 
 	/* tell interrupt handler that we're using the i2c peripheral */
 	*device->i2c_owner = FC_I2C_OWNER_FC_ADXL375;
@@ -57,24 +49,11 @@ int fc_adxl375_initialize(struct fc_adxl375 *device, I2C_HandleTypeDef *i2c_hand
 	device->i2c_is_done = 0;
 	device->i2c_is_error = 0;
 
-	/* release mutex guarding i2c peripheral */
-	mutex_status = osMutexRelease(device->i2c_mutex_handle);
-	if (mutex_status != osOK) { /* TODO: better error handling */
-		/* very bad situation! */
-		return 100;
-	}
-
 	/* ============================================== */
 	/* set measure bit in POWER_CTL register (pg. 22) */
 	/* ============================================== */
 
 	data = 0b00001000;
-
-	/* take mutex guarding i2c peripheral */
-	mutex_status = osMutexAcquire(device->i2c_mutex_handle, osWaitForever); /* TODO: don't wait forever */
-	if (mutex_status != osOK) { /* TODO: better error handling */
-		return 100;
-	}
 
 	/* tell interrupt handler that we're using the i2c peripheral */
 	*device->i2c_owner = FC_I2C_OWNER_FC_ADXL375;
@@ -96,13 +75,6 @@ int fc_adxl375_initialize(struct fc_adxl375 *device, I2C_HandleTypeDef *i2c_hand
 	device->i2c_is_done = 0;
 	device->i2c_is_error = 0;
 
-	/* release mutex guarding i2c peripheral */
-	mutex_status = osMutexRelease(device->i2c_mutex_handle);
-	if (mutex_status != osOK) { /* TODO: better error handling */
-		/* very bad situation! */
-		return 100;
-	}
-
 	return 0;
 }
 
@@ -113,12 +85,6 @@ int fc_adxl375_process(struct fc_adxl375 *device) {
 	/* ================================ */
 
 	uint8_t data[6]; /* DATAX0, X1, Y0, Y1, Z0, and Z1 registers (pg. 24) */
-
-	/* take mutex guarding i2c peripheral */
-	osStatus_t mutex_status = osMutexAcquire(device->i2c_mutex_handle, osWaitForever); /* TODO: don't wait forever */
-	if (mutex_status != osOK) { /* TODO: better error handling */
-		return 100;
-	}
 
 	/* tell interrupt handler that we're using the i2c peripheral */
 	*device->i2c_owner = FC_I2C_OWNER_FC_ADXL375;
@@ -139,13 +105,6 @@ int fc_adxl375_process(struct fc_adxl375 *device) {
 	}
 	device->i2c_is_done = 0; /* reset */
 	device->i2c_is_error = 0;
-
-	/* release mutex guarding i2c peripheral */
-	mutex_status = osMutexRelease(device->i2c_mutex_handle);
-	if (mutex_status != osOK) { /* TODO: better error handling */
-		/* very bad situation! */
-		return 100;
-	}
 
 	/* ===================================== */
 	/* convert bytes to signed 16-bit values */
