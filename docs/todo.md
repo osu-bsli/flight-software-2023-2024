@@ -6,8 +6,12 @@
 - [ ] (joe) this task is assigned to joe
 - [x] (joe) this task is finished
 
+## Overall
+
 ## ADXL375 driver (accelerometer)
-- [ ] (dersu) use interrupts instead of blocking functions
+- [x] (dersu) (by 2023-10-22) use interrupts instead of blocking functions
+- [ ] fix bitshift of i2c address
+- [ ] remove i2c address check (the DEVID register is fixed and means something different)
 
 ## MS5607 driver (barometer)
 - [ ] implement the code
