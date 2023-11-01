@@ -3,18 +3,24 @@
 
 ## accelerometer (ADXL375BCCZ)
 - I2C1
-  - I2C1_SDA (PB7)
-  - I2C1_SCL (PB6)
+  - I2C1_SDA
+  - I2C1_SCL
 
 
 ## imu (BMI323)
 
 
-## barometer (MS5607) (indirectly but still over I2C thing)
+## barometer (MS5607) (indirectly but still over I2C)
 - I2C1
-  - I2C1_SDA (PB7)
-  - I2C1_SCL (PB6)
+  - I2C1_SDA
+  - I2C1_SCL
 
+## magnetometer (BM1422AGMV)
+- [datasheet](https://fscdn.rohm.com/en/products/databook/datasheet/ic/sensor/geomagnetic/bm1422agmv-e.pdf)
+- I2C1
+  - I2C1_SDA
+  - I2C1_SCL
+- GPIO_Input (data ready interrupt)
 
 ## sd card (over SPI)
 - SPI4
