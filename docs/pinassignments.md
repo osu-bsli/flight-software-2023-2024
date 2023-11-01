@@ -5,6 +5,7 @@
 - I2C1
   - I2C1_SDA (PB7)
   - I2C1_SCL (PB6)
+- GPIO_Input (Either interrupt pin on the chip can be used)
 
 
 ## imu (BMI323)
