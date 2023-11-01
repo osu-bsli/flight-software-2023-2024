@@ -5,6 +5,7 @@
 - I2C1
   - I2C1_SDA
   - I2C1_SCL
+- GPIO_Input (data ready interrupt, either interrupt pin on the sensor can be used)
 
 
 ## imu (BMI323)
