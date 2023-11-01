@@ -11,3 +11,11 @@
 
 
 ## sd card (over SPI)
+- SPI4
+  - SPI4_MISO
+  - SPI4_MOSI
+  - GPIO_Output or SPI4_NSS
+  - SPI4_SCK
+- USART1
+  - USART1_RX
+  - USART1_TX
