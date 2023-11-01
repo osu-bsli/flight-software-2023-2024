@@ -3,7 +3,8 @@
 
 ## accelerometer (ADXL375BCCZ)
 - I2C1
-  - 
+  - I2C1_SDA (PB7)
+  - I2C1_SCL (PB6)
 
 
 ## imu (BMI323)
@@ -11,6 +12,8 @@
 
 ## barometer (MS5607) (indirectly but still over I2C thing)
 - I2C1
+  - I2C1_SDA (PB7)
+  - I2C1_SCL (PB6)
 
 
 ## sd card (over SPI)
