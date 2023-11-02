@@ -1,5 +1,9 @@
 ## gps (MAX-M8C-0)
 - [datasheet] (https://content.u-blox.com/sites/default/files/MAX-8_DataSheet_%28UBX-16000093%29.pdf)
+- pins:
+  - I2C1_SDA
+  - I2C1_SCL
+  - GPIO_Input (data ready interrupt) (pg. 14)
 
 ## accelerometer (ADXL375BCCZ)
 - 7-bit I2C Address: 0x1D (pg. 18)
@@ -12,8 +16,9 @@
 
 ## imu (BMI323)
 - pins:
-  - I2C1_SDA
-  - I2C1_SCL
+  - SPI1_SCK
+  - SPI1_MISO
+  - SPI1_MOSI
   - GPIO_Input (data ready interrupt, either interrupt pin on the sensor can be used)
 
 ## barometer (MS5607) (indirectly but still over I2C)
