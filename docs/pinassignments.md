@@ -1,5 +1,7 @@
 ## gps (MAX-M8C-0)
 - [datasheet] (https://content.u-blox.com/sites/default/files/MAX-8_DataSheet_%28UBX-16000093%29.pdf)
+- [2: datasheet] (https://content.u-blox.com/sites/default/files/products/documents/u-blox8-M8_ReceiverDescrProtSpec_UBX-13003221.pdf)
+- DDC Address: 0x42 (default setting, refer to pg. 37 of [2])
 - which pins do we need?
 
 ## accelerometer (ADXL375BCCZ)
