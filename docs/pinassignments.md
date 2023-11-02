@@ -14,7 +14,7 @@
   - I2C1_SCL
 
 ## barometer (MS5607) (indirectly but still over I2C)
-- 111011Cx pg. 12
+- I2C Address: 111011Cx pg. 12 [datasheet](https://www.te.com/commerce/DocumentDelivery/DDEController?Action=showdoc&DocId=Data+Sheet%7FMS5607-02BA03%7FB4%7Fpdf%7FEnglish%7FENG_DS_MS5607-02BA03_B4.pdf%7FMS560702BA03-50)
 - I2C1
   - I2C1_SDA
   - I2C1_SCL
