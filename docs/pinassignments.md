@@ -3,8 +3,8 @@
 - [2: datasheet] (https://content.u-blox.com/sites/default/files/products/documents/u-blox8-M8_ReceiverDescrProtSpec_UBX-13003221.pdf)
 - DDC Address: 0x42 (default setting, refer to pg. 37 of [2])
 - pins:
-  - I2C1_SDA
-  - I2C1_SCL
+  - I2C2_SDA
+  - I2C2_SCL
   - GPIO_Input (data ready interrupt) (pg. 14)
 
 ## accelerometer (ADXL375BCCZ)
@@ -33,8 +33,8 @@
 ## magnetometer (BM1422AGMV)
 - [datasheet](https://fscdn.rohm.com/en/products/databook/datasheet/ic/sensor/geomagnetic/bm1422agmv-e.pdf)
 - pins:
-  - I2C1_SDA
-  - I2C1_SCL
+  - I2C2_SDA
+  - I2C2_SCL
   - GPIO_Input (data ready interrupt)
 
 ## sd card (over SPI)
