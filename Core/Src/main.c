@@ -25,6 +25,9 @@
 /* USER CODE BEGIN Includes */
 #include "fc_common.h"
 #include "fc_adxl375.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -86,7 +89,7 @@ void startAirbrakeTask(void *argument);
 void startTelemetryTask(void *argument);
 
 /* USER CODE BEGIN PFP */
-
+void process_SD_card( void );
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -230,6 +233,7 @@ int main(void)
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  process_SD_card();
   while (1)
   {
     /* USER CODE END WHILE */
@@ -280,7 +284,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.AHBCLKDivider = RCC_HCLK_DIV1;
   RCC_ClkInitStruct.APB3CLKDivider = RCC_APB3_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_APB1_DIV2;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_APB2_DIV1;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_APB2_DIV2;
   RCC_ClkInitStruct.APB4CLKDivider = RCC_APB4_DIV1;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
@@ -449,10 +453,10 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_4, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : PE3 */
-  GPIO_InitStruct.Pin = GPIO_PIN_3;
+  /*Configure GPIO pin : PE4 */
+  GPIO_InitStruct.Pin = GPIO_PIN_4;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -463,7 +467,82 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+#ifdef __GNUC__
+  /* With GCC, small printf (option LD Linker->Libraries->Small printf
+     set to 'Yes') calls __io_putchar() */
+int __io_putchar(int ch)
+#else
+int fputc(int ch, FILE *f)
+#endif /* __GNUC__ */
+{
+  /* Place your implementation of fputc here */
+  /* e.g. write a character to the UART3 and Loop until the end of transmission */
+  HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
+  return ch;
+}
 
+void process_SD_card( void )
+{
+  FATFS       FatFs;                //Fatfs handle
+  FIL         fil;                  //File handle
+  FRESULT     fres;                 //Result after operations
+  char        buf[100];
+  do
+  {
+    //Mount the SD Card
+    fres = f_mount(&FatFs, "", 1);    //1=mount now
+    if (fres != FR_OK)
+    {
+      printf("No SD Card found : (%i)\r\n", fres);
+      break;
+    }
+    printf("SD Card Mounted Successfully!!!\r\n");
+    //Read the SD Card Total size and Free Size
+    FATFS *pfs;
+    DWORD fre_clust;
+    uint32_t totalSpace, freeSpace;
+    f_getfree("", &fre_clust, &pfs);
+    totalSpace = (uint32_t)((pfs->n_fatent - 2) * pfs->csize * 0.5);
+    freeSpace = (uint32_t)(fre_clust * pfs->csize * 0.5);
+    printf("TotalSpace : %lu bytes, FreeSpace = %lu bytes\n", totalSpace, freeSpace);
+    //Open the file
+    fres = f_open(&fil, "EmbeTronicX.txt", FA_WRITE | FA_READ | FA_CREATE_ALWAYS);
+    if(fres != FR_OK)
+    {
+      printf("File creation/open Error : (%i)\r\n", fres);
+      break;
+    }
+    printf("Writing data!!!\r\n");
+    //write the data
+    f_puts("Welcome to EmbeTronicX", &fil);
+    //close your file
+    f_close(&fil);
+    //Open the file
+    fres = f_open(&fil, "EmbeTronicX.txt", FA_READ);
+    if(fres != FR_OK)
+    {
+      printf("File opening Error : (%i)\r\n", fres);
+      break;
+    }
+    //read the data
+    f_gets(buf, sizeof(buf), &fil);
+    printf("Read Data : %s\n", buf);
+    //close your file
+    f_close(&fil);
+    printf("Closing File!!!\r\n");
+#if 0
+    //Delete the file.
+    fres = f_unlink(EmbeTronicX.txt);
+    if (fres != FR_OK)
+    {
+      printf("Cannot able to delete the file\n");
+    }
+#endif
+  } while( false );
+  //We're done, so de-mount the drive
+  f_mount(NULL, "", 0);
+  printf("SD Card Unmounted Successfully!!!\r\n");
+}
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_startSensorTask */
@@ -518,27 +597,6 @@ void startTelemetryTask(void *argument)
     osDelay(1);
   }
   /* USER CODE END startTelemetryTask */
-}
-
-/**
-  * @brief  Period elapsed callback in non blocking mode
-  * @note   This function is called  when TIM6 interrupt took place, inside
-  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
-  * a global variable "uwTick" used as application time base.
-  * @param  htim : TIM handle
-  * @retval None
-  */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-  /* USER CODE BEGIN Callback 0 */
-
-  /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM6) {
-    HAL_IncTick();
-  }
-  /* USER CODE BEGIN Callback 1 */
-
-  /* USER CODE END Callback 1 */
 }
 
 /**
