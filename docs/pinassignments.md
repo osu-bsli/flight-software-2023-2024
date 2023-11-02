@@ -1,10 +1,14 @@
 ## gps (MAX-M8C-0)
+- [datasheet] (https://content.u-blox.com/sites/default/files/MAX-8_DataSheet_%28UBX-16000093%29.pdf)
 - which pins do we need?
 
 ## accelerometer (ADXL375BCCZ)
 - I2C1
   - I2C1_SDA
   - I2C1_SCL
+- 7-bit I2C Address: 0x1D (Page 18 of 32)
+  - Read Address: 0x3B
+  - Write Address: 0x3A
 - GPIO_Input (data ready interrupt, either interrupt pin on the sensor can be used)
 
 
