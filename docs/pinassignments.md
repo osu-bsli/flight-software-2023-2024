@@ -14,6 +14,7 @@
   - I2C1_SCL
 
 ## barometer (MS5607) (indirectly but still over I2C)
+- 111011Cx pg. 12
 - I2C1
   - I2C1_SDA
   - I2C1_SCL
