@@ -8,6 +8,8 @@
 #ifndef INC_FC_BM1422_H_
 #define INC_FC_BM1422_H_
 
+#include "stm32h7xx_hal.h"
+
 // i2c constants (pg. 9-10)
 #define FC_BM1422_I2C_LOW		0x0Eu		     // NOT bit-shifted
 #define FC_BM1422_I2C_HIGH		0x0Fu			 // NOT bit-shifted
@@ -35,13 +37,19 @@
 /* struct */
 
 struct fc_bm1422 {
+	I2C_HandleTypeDef *i2c_handle;	 /* the i2c peripheral */
 	int *i2c_owner;
 	int i2c_is_done;
 	int i2c_is_error;
 
+	/* TODO: figure this out */
 	float x_data;
 	float y_data;
 	float z_data;
 };
+
+/* Functions */
+int fc_bm1422_initialize(struct fc_bm1422 *device, I2C_HandleTypeDef *i2c_handle, int *i2c_owner);
+int fc_bm1422_process(struct fc_bm1422 *device);
 
 #endif /* INC_FC_BM1422_H_ */
