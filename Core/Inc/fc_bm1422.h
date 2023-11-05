@@ -48,8 +48,15 @@ struct fc_bm1422 {
 	float z_data;
 };
 
-/* Functions */
+/* Functions
+ * TODO: Add comments */
 int fc_bm1422_initialize(struct fc_bm1422 *device, I2C_HandleTypeDef *i2c_handle, int *i2c_owner);
 int fc_bm1422_process(struct fc_bm1422 *device);
+
+HAL_StatusTypeDef fc_bm1422_readregister(struct fc_bm1422 *device, uint8_t reg, uint8_t *data);
+
+HAL_StatusTypeDef fc_bm1422_readregisters(struct fc_bm1422 *device, uint8_t reg, uint8_t *data, uint8_t length);
+
+HAL_StatusTypeDef fc_bm1422_writeregister(struct fc_bm1422 *device, uint8_t reg, uint8_t *data);
 
 #endif /* INC_FC_BM1422_H_ */
