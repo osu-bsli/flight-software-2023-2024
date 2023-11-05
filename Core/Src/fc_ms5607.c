@@ -1,12 +1,14 @@
 /*
- * fc_adxl375.c
+ * fc_ms5607.c
  *
- *  Created on: Sep 24, 2023
+ *  Created on: Nov 5, 2023
  *      Author: bsli
  */
 
-#include "fc_adxl375.h"
+#include "fc_ms5607.h"
 #include "stm32h7xx_hal.h"
+
+/*THIS IS TO BE EDITED- EVERYTHING BELOW IS JUST A TEMPLATE FOR NOW */
 
 int adxl375_initialize(struct fc_adxl375 *device, I2C_HandleTypeDef *i2c_handle) {
 

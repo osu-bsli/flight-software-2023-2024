@@ -1,9 +1,12 @@
 /*
- * fc_adxl375.h
+ * fc_ms5607.h
  *
- *  Created on: Sep 24, 2023
+ *  Created on: Nov 5, 2023
  *      Author: bsli
  */
+
+/*THIS IS TO BE EDITED- EVERYTHING BELOW IS JUST A TEMPLATE FOR NOW */
+
 
 #ifndef INC_FC_ADXL375_H_
 #define INC_FC_ADXL375_H_
