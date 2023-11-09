@@ -31,6 +31,11 @@
 - motor encoder pins:
   - I2C4
 
+### Ematch continuity testing
+- ADC3 (3 pins in "single-ended" mode)
+
+### External clock
+
 
 ## Pin assignments
 
@@ -75,6 +80,11 @@
 - PA14 = DEBUG_JTCK-SWCLK
 - PA13 = DEBUG_JTMS-SWDIO
 
+### Ematch continuity testing
+- PC3_C = ADC3_INP1
+- PF9 = ADC3_INP2
+- PF7 = ADC3_INP3
 
+### External clock
 
 

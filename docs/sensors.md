@@ -26,3 +26,7 @@
 ## Inter-board communication
 
 ## Airbrakes
+
+## Ematch continuity testing
+
+## External clock
