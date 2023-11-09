@@ -35,6 +35,7 @@
 - ADC3 (3 pins in "single-ended" mode)
 
 ### External clock
+- RCC (High Speed Clock (HSE) set to "Crystal/Ceramic Resonator")
 
 
 ## Pin assignments
@@ -86,5 +87,6 @@
 - PF7 = ADC3_INP3
 
 ### External clock
-
+- PH0-OSC_IN = RCC_OSC_IN
+- PH1-OSC_OUT = RCC_OSC_OUT
 
