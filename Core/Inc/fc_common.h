@@ -14,5 +14,6 @@
 /* constants for tracking which task is currently using an i2c device */
 #define FC_I2C_OWNER_MAIN 0
 #define FC_I2C_OWNER_FC_ADXL375 1
+#define FC_I2C_OWNER_FC_BM1422 2
 
 #endif /* INC_FC_COMMON_H_ */
