@@ -23,12 +23,13 @@
 - USART6 + SPI4 + the SPI4_NSS pin (we may configure it as a gpio output instead, apparently it may be more reliable)
 
 ### Inter-board communication
-- FDCAN2
+- FDCAN2 (NO)
+- UART?
 
 ### Airbrakes
-- driver pins:
-  - (TBD)
-- motor encoder pins:
+- stepper motor driver:
+  - 8 gpio outputs
+- stepper motor encoder:
   - I2C4
 
 ### Ematch continuity testing
@@ -67,9 +68,16 @@
 - PC6 = USART6_TX
 
 ### Airbrakes
-- driver pins:
-  - (TBD)
-- motor encoder pins:
+- stepper motor driver pins:
+  - PI4 = GPIO_OUT_A4988_1
+  - PI5 = GPIO_OUT_A4988_2
+  - PI6 = GPIO_OUT_A4988_3
+  - PI7 = GPIO_OUT_A4988_4
+  - PI8 = GPIO_OUT_A4988_5
+  - PC13 = GPIO_OUT_A4988_6
+  - PC14-OSC32_IN = GPIO_OUT_A4988_7
+  - PC15-OSC32_OUT = GPIO_OUT_A4988_8
+- stepper motor encoder pins:
   - PF14 = I2C4_SCL
   - PF15 = I2C4_SDA
 

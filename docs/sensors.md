@@ -26,6 +26,8 @@
 ## Inter-board communication
 
 ## Airbrakes
+- stepper motor driver:
+- stepper motor encoder:
 
 ## Ematch continuity testing
 
