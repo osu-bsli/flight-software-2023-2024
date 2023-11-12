@@ -5,7 +5,11 @@
  *      Author: bsli
  */
 
-/*THIS IS TO BE EDITED- EVERYTHING BELOW IS JUST A TEMPLATE FOR NOW */
+/*THIS IS TO BE EDITED- EVERYTHING BELOW IS JUST A TEMPLATE FOR NOW
+ *
+ *
+ * Need to get PROM address
+ * Pg. 8 has all the important constants*/
 
 
 #ifndef INC_FC_ADXL375_H_
@@ -18,7 +22,8 @@
 #define FC_ADXL375_I2C_WRITE_ADDRESS 0x3Au
 #define FC_ADXL375_I2C_READ_ADDRESS  0x3Bu
 
-/* constants (pg. 10) */
+/* constants (pg. 10)
+ * These are updated for ms5067*/
 #define FC_MS5607_CONSTANT_RESET            		0x1Eu
 #define FC_MS5607_CONSTANT_CONVERTD1_OSR256     	0x40u
 #define FC_MS5607_CONSTANT_CONVERTD1_OSR512     	0x42u
