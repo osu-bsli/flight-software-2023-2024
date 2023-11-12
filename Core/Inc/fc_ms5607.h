@@ -58,12 +58,12 @@ struct fc_ms5607 {
 };
 
 /* functions */
-int ms5607_initialize(struct fc_adxl375 *device, I2C_HandleTypeDef *i2c_handle);
-int ms5607_process(struct fc_adxl375 *device);
+int ms5607_initialize(struct fc_ms5607 *device, I2C_HandleTypeDef *i2c_handle);
+int ms5607_process(struct fc_ms5607 *device);
 
-HAL_StatusTypeDef fc_ms5607_readregister(struct fc_adxl375 *device, uint8_t reg, uint8_t *data);
-HAL_StatusTypeDef fc_ms5607_readregisters(struct fc_adxl375 *device, uint8_t reg, uint8_t *data, uint8_t length);
-HAL_StatusTypeDef fc_ms5607_writeregister(struct fc_adxl375 *device, uint8_t reg, uint8_t *data);
+HAL_StatusTypeDef fc_ms5607_readregister(struct fc_ms5607 *device, uint8_t reg, uint8_t *data);
+HAL_StatusTypeDef fc_ms5607_readregisters(struct fc_ms5607 *device, uint8_t reg, uint8_t *data, uint8_t length);
+HAL_StatusTypeDef fc_ms5607_writeregister(struct fc_ms5607 *device, uint8_t reg, uint8_t *data);
 
 #endif /* INC_FC_MS5607_H_ */
 

@@ -10,7 +10,7 @@
 
 /*THIS IS TO BE EDITED- EVERYTHING BELOW IS JUST A TEMPLATE FOR NOW */
 
-int adxl375_initialize(struct fc_adxl375 *device, I2C_HandleTypeDef *i2c_handle) {
+int ms5607_initialize(struct fc_ms5607 *device, I2C_HandleTypeDef *i2c_handle) {
 
 	/* reset struct */
 	device->i2c_handle     = i2c_handle;
