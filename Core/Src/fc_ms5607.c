@@ -14,14 +14,13 @@ int ms5607_initialize(struct fc_ms5607 *device, I2C_HandleTypeDef *i2c_handle) {
 
 	/* reset struct */
 	device->i2c_handle     = i2c_handle;
-	device->acceleration_x = 0.0f;
-	device->acceleration_y = 0.0f;
-	device->acceleration_z = 0.0f;
+	device->pressure_mbar = 0.0f;
+	device->temperature_c = 0.0f;
 
 	/* check that the device id is correct */
 	HAL_StatusTypeDef status;
 	uint8_t data;
-	status = fc_adxl375_readregister(device, FC_ADXL375_REGISTER_DEVID, &data);
+	status = fc_ms5607_readregister(device, FC_MS5607_I2C_DEVICE_ID, &data);
 	if (status != HAL_OK) {
 		return 42;
 	}

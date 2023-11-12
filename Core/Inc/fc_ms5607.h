@@ -54,7 +54,7 @@ struct fc_ms5607 {
 	 int i2c_is_error;              /* i2c error interrupt will set this to true, false otherwise */
 
 	 float pressure_mbar; /* pressure in mbar */
-	 float temperture_c; /* temperature in degrees Celsius */
+	 float temperature_c; /* temperature in degrees Celsius */
 };
 
 /* functions */
