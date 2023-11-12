@@ -4,22 +4,25 @@
 ## Peripheral assignments
 
 
-### gps (MAX-M8C-0)
+### GPS (MAX-M8C-0)
 - I2C2 + a gpio input as a data ready interrupt (pg. 14)
 
-### accelerometer (ADXL375BCCZ)
+### Accelerometer (ADXL375BCCZ)
 - I2C1 + a gpio input as a data ready interrupt
 
-### imu (BMI323)
+### IMU (BMI323)
 - I2C1 + a gpio input as a data ready interrupt
 
-### barometer (MS5607) (indirectly but still over I2C)
+### Barometer (MS5607) (indirectly but still over I2C)
 - I2C1
 
-### magnetometer (BM1422AGMV)
+### Magnetometer (BM1422AGMV)
 - I2C2 + a gpio input as a data ready interrupt
 
-### sd card (over SPI)
+## Motor thermometer (MCP9600)
+- I2C2
+
+### SD card (over SPI)
 - USART6 + SDMMC1
 
 ### Inter-board communication
