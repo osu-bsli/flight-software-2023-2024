@@ -19,16 +19,25 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
+#include "fatfs.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "fc_common.h"
 #include "fc_adxl375.h"
+#include <stdio.h>
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
+#ifdef __GNUC__
+  /* With GCC, small printf (option LD Linker->Libraries->Small printf
+     set to 'Yes') calls __io_putchar() */
+  #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#else
+  #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#endif /* __GNUC__ */
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -49,31 +58,19 @@ I2C_HandleTypeDef hi2c1;
 I2C_HandleTypeDef hi2c2;
 I2C_HandleTypeDef hi2c4;
 
+SD_HandleTypeDef hsd1;
+
 SPI_HandleTypeDef hspi1;
 SPI_HandleTypeDef hspi4;
 
 UART_HandleTypeDef huart6;
 
-/* Definitions for sensorTask */
-osThreadId_t sensorTaskHandle;
-const osThreadAttr_t sensorTask_attributes = {
-  .name = "sensorTask",
-  .stack_size = 128 * 4,
+/* Definitions for defaultTask */
+osThreadId_t defaultTaskHandle;
+const osThreadAttr_t defaultTask_attributes = {
+  .name = "defaultTask",
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityNormal,
-};
-/* Definitions for airbrakeTask */
-osThreadId_t airbrakeTaskHandle;
-const osThreadAttr_t airbrakeTask_attributes = {
-  .name = "airbrakeTask",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityLow,
-};
-/* Definitions for telemetryTask */
-osThreadId_t telemetryTaskHandle;
-const osThreadAttr_t telemetryTask_attributes = {
-  .name = "telemetryTask",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityLow,
 };
 /* USER CODE BEGIN PV */
 
@@ -89,9 +86,8 @@ static void MX_SPI4_Init(void);
 static void MX_FDCAN2_Init(void);
 static void MX_I2C4_Init(void);
 static void MX_USART6_UART_Init(void);
-void startSensorTask(void *argument);
-void startAirbrakeTask(void *argument);
-void startTelemetryTask(void *argument);
+static void MX_SDMMC1_SD_Init(void);
+void StartDefaultTask(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -194,6 +190,8 @@ int main(void)
   MX_FDCAN2_Init();
   MX_I2C4_Init();
   MX_USART6_UART_Init();
+  MX_SDMMC1_SD_Init();
+  MX_FATFS_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -218,14 +216,8 @@ int main(void)
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* creation of sensorTask */
-  sensorTaskHandle = osThreadNew(startSensorTask, NULL, &sensorTask_attributes);
-
-  /* creation of airbrakeTask */
-  airbrakeTaskHandle = osThreadNew(startAirbrakeTask, NULL, &airbrakeTask_attributes);
-
-  /* creation of telemetryTask */
-  telemetryTaskHandle = osThreadNew(startTelemetryTask, NULL, &telemetryTask_attributes);
+  /* creation of defaultTask */
+  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -507,6 +499,33 @@ static void MX_I2C4_Init(void)
 }
 
 /**
+  * @brief SDMMC1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_SDMMC1_SD_Init(void)
+{
+
+  /* USER CODE BEGIN SDMMC1_Init 0 */
+
+  /* USER CODE END SDMMC1_Init 0 */
+
+  /* USER CODE BEGIN SDMMC1_Init 1 */
+
+  /* USER CODE END SDMMC1_Init 1 */
+  hsd1.Instance = SDMMC1;
+  hsd1.Init.ClockEdge = SDMMC_CLOCK_EDGE_RISING;
+  hsd1.Init.ClockPowerSave = SDMMC_CLOCK_POWER_SAVE_DISABLE;
+  hsd1.Init.BusWide = SDMMC_BUS_WIDE_4B;
+  hsd1.Init.HardwareFlowControl = SDMMC_HARDWARE_FLOW_CONTROL_DISABLE;
+  hsd1.Init.ClockDiv = 0;
+  /* USER CODE BEGIN SDMMC1_Init 2 */
+
+  /* USER CODE END SDMMC1_Init 2 */
+
+}
+
+/**
   * @brief SPI1 Initialization Function
   * @param None
   * @retval None
@@ -664,9 +683,11 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOF_CLK_ENABLE();
+  __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pins : GPIO_INTERRUPT_MAXM8C_DATAREADY_Pin GPIO_INTERRUPT_BM1422AGMV_DATAREADY_Pin */
   GPIO_InitStruct.Pin = GPIO_INTERRUPT_MAXM8C_DATAREADY_Pin|GPIO_INTERRUPT_BM1422AGMV_DATAREADY_Pin;
@@ -691,61 +712,65 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+PUTCHAR_PROTOTYPE
+{
+  /* Place your implementation of fputc here */
+  /* e.g. write a character to the EVAL_COM1 and Loop until the end of transmission */
+  HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, 0xFFFF);
+
+  return ch;
+}
 
 /* USER CODE END 4 */
 
-/* USER CODE BEGIN Header_startSensorTask */
+/* USER CODE BEGIN Header_StartDefaultTask */
 /**
-  * @brief  Function implementing the sensorTask thread.
+  * @brief  Function implementing the defaultTask thread.
   * @param  argument: Not used
   * @retval None
   */
-/* USER CODE END Header_startSensorTask */
-void startSensorTask(void *argument)
+/* USER CODE END Header_StartDefaultTask */
+void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN 5 */
+  // 1. Mount - 0
+  f_mount(&SDFatFS, (TCHAR const*)SDPath, 0);
+
+  // TEST Write operation
+  // 2. Open file for writing
+  if(f_open(&SDFile, "F7FILE1.TXT", FA_CREATE_ALWAYS | FA_WRITE) != FR_OK) {
+	  printf("Failed to open write file\r\n");
+  } else {
+	  printf("Opened write file successfully\r\n");
+	  // Write data to text file
+	  res = f_write(&SDFile, wtext, strlen((char *)wtext), (void *)&byteswritten);
+	  if((byteswritten == 0) || (res != FR_OK)) {
+		  printf("Failed to write file!\r\n");
+	  } else {
+		  printf("File written successfully\r\n");
+		  printf("Write Content: %s\r\n", wtext);
+	  }
+	  f_close(&SDFile);
+  }
+
+  // Test read file
+  f_open(&SDFile, "F7FILE1.TXT",  FA_READ);
+	memset(rtext,0,sizeof(rtext));
+	res = f_read(&SDFile, rtext, sizeof(rtext), (UINT*)&bytesread);
+	if((bytesread == 0) || (res != FR_OK)) {
+		printf("Failed to read file!\r\n");
+	} else {
+		printf("File read successfully\r\n");
+		printf("File content: %s\r\n", (char *)rtext);
+	}
+	f_close(&SDFile);
+
   /* Infinite loop */
   for(;;)
   {
     osDelay(1);
   }
   /* USER CODE END 5 */
-}
-
-/* USER CODE BEGIN Header_startAirbrakeTask */
-/**
-* @brief Function implementing the airbrakeTask thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_startAirbrakeTask */
-void startAirbrakeTask(void *argument)
-{
-  /* USER CODE BEGIN startAirbrakeTask */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END startAirbrakeTask */
-}
-
-/* USER CODE BEGIN Header_startTelemetryTask */
-/**
-* @brief Function implementing the telemetryTask thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_startTelemetryTask */
-void startTelemetryTask(void *argument)
-{
-  /* USER CODE BEGIN startTelemetryTask */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END startTelemetryTask */
 }
 
 /**
