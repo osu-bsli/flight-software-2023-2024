@@ -43,7 +43,7 @@ int fc_bm1422_initialize(struct fc_bm1422 *device, I2C_HandleTypeDef *i2c_handle
 	device->i2c_is_error = 0;
 
 	/* tell interrupt handler that this sensor is using the i2c peripheral */
-	*decice->i2c_owner = FC_I2C_OWNER_FC_BM1422;
+	*device->i2c_owner = FC_I2C_OWNER_FC_BM1422;
 
 	/* Start i2c write */
 	if (status != HAL_OK) {
@@ -60,7 +60,7 @@ int fc_bm1422_initialize(struct fc_bm1422 *device, I2C_HandleTypeDef *i2c_handle
 	device->i2c_is_done = 0;
 	device->i2c_is_error = 0;
 
-	/* TODO: FINISH THIS */
+	/* TODO: FINISH THE REST OF THIS */
 
 	return 0;
 }
