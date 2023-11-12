@@ -21,24 +21,19 @@ int ms5607_initialize(struct fc_ms5607 *device, I2C_HandleTypeDef *i2c_handle) {
 	HAL_StatusTypeDef status;
 	uint8_t data;
 	status = fc_ms5607_readregister(device, FC_MS5607_I2C_DEVICE_ID, &data);
-	if (status != HAL_OK) {
-		return 42;
-	}
-	if (data != FC_ADXL375_I2C_DEVICE_ID) {
-		return 255;
-	}
 
-	/* set measure bit in POWER_CTL register (pg. 22) */
-	data = 0b00001000;
-	status = fc_adxl375_writeregister(device, FC_ADXL375_REGISTER_POWER_CTL, &data);
+	// TODO: Recheck what 42 and 255 should be declared as
 	if (status != HAL_OK) {
 		return 42;
+	}
+	if (data != FC_MS5607_I2C_DEVICE_ID) {
+		return 255;
 	}
 
 	return 0;
 }
 
-int adxl375_process(struct fc_adxl375 *device) {
+int ms5607_process(struct fc_ms5607 *device) {
 
 	/* read raw acceleration data bytes */
 	uint8_t data[6]; /* DATAX0, X1, Y0, Y1, Z0, and Z1 registers (pg. 24) */
