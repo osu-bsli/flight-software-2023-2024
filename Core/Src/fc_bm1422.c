@@ -64,3 +64,23 @@ int fc_bm1422_initialize(struct fc_bm1422 *device, I2C_HandleTypeDef *i2c_handle
 
 	return 0;
 }
+
+/* TODO: finish function body */
+int fc_bm1422_process(struct fc_bm1422 *device) {
+
+	return 0;
+}
+
+/* TODO: replace "0" with equivalent of device ID for the magnometer */
+
+HAL_StatusTypeDef fc_bm1422_readregister(struct fc_bm1422 *device, uint8_t reg, uint8_t *data) {
+	return HAL_I2C_Mem_Read_IT(device->i2c_handle, 0, reg, sizeof(reg), data, sizeof(data));
+}
+
+HAL_StatusTypeDef fc_bm1422_readregisters(struct fc_bm1422 *device, uint8_t reg, uint8_t *data, uint8_t length) {
+	return HAL_I2C_Mem_Read_IT(device->i2c_handle, 0, reg, sizeof(reg), data, length);
+}
+
+HAL_StatusTypeDef fc_bm1422_writeregister(struct fc_bm1422 *device, uint8_t reg, uint8_t *data) {
+	return HAL_I2C_Mem_Write_IT(device->i2c_handle, 0, reg, sizeof(reg), data, sizeof(data));
+}
