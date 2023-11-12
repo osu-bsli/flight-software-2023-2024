@@ -20,7 +20,7 @@
 - I2C2 + a gpio input as a data ready interrupt
 
 ### sd card (over SPI)
-- USART6 + SPI4 + the SPI4_NSS pin (we may configure it as a gpio output instead, apparently it may be more reliable)
+- USART6 + SDMMC1
 
 ### Inter-board communication
 - UART8
@@ -54,10 +54,12 @@
 - PF3 = GPIO_IN_BMI1422AGMV_DATAREADY
 
 ### SD card
-- PE2 = SPI4_SCK
-- PE4 = SPI4_NSS (or just a gpio output, but shouldn't make any difference)
-- PE5 = SPI4_MISO
-- PE6 = SPI4_MOSI
+- PC8 = SDMMC1_D0
+- PC9 = SDMMC1_D1
+- PC10 = SDMMC1_D2
+- PC11 = SDMMC1_D3
+- PC12 = SDMMC1_CK
+- PD2 = SDMMC_CMD
 - PC7 = USART6_RX
 - PC6 = USART6_TX
 
