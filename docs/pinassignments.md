@@ -23,8 +23,7 @@
 - USART6 + SPI4 + the SPI4_NSS pin (we may configure it as a gpio output instead, apparently it may be more reliable)
 
 ### Inter-board communication
-- FDCAN2 (NO)
-- UART?
+- UART8
 
 ### Airbrakes
 - stepper motor driver:
@@ -82,8 +81,8 @@
   - PF15 = I2C4_SDA
 
 ### Inter-board communication
-- PB13 = FDCAN2_TX
-- PB12 = FDCAN2_RX
+- PE1 = UART8_TX
+- PE0 = UART8_RX
 
 ### Debugging
 - PA14 = DEBUG_JTCK-SWCLK
