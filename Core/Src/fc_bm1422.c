@@ -28,8 +28,16 @@ int fc_bm1422_initialize(struct fc_bm1422 *device, I2C_HandleTypeDef *i2c_handle
 	/* tell interrupt handler that we're using the i2c peripheral */
 	*device->i2c_owner = FC_I2C_OWNER_FC_BM1422;
 
+	/* start i2c read with a 2-byte Batch Read */
+	/* Use the FIRST Device Address for the batch read */
+	status = fc_bm1422_readregisters(device, FC_BM1422_REGISTER_INFORMATION, &data, 2);
 	if (status != HAL_OK) {
 		return 42;
+	}
+
+	/* TODO: Replace "5" with I2C Register Device ID */
+	if (data != 5) {
+		return 255;
 	}
 
 	/* wait under i2c read is complete */
@@ -42,10 +50,15 @@ int fc_bm1422_initialize(struct fc_bm1422 *device, I2C_HandleTypeDef *i2c_handle
 	device->i2c_is_done = 0;
 	device->i2c_is_error = 0;
 
+	/* Set the Power Control Bit for Magnometer
+	 * Default Setting: 0x22 -> 00100010 (pg.12)*/
+	data = 0b01101100u;
+
 	/* tell interrupt handler that this sensor is using the i2c peripheral */
 	*device->i2c_owner = FC_I2C_OWNER_FC_BM1422;
 
 	/* Start i2c write */
+	status = fc_bm1422_writeregister(device, FC_BM1422_REGISTER_CONTROL1, &data);
 	if (status != HAL_OK) {
 		return 42;
 	}
@@ -59,8 +72,6 @@ int fc_bm1422_initialize(struct fc_bm1422 *device, I2C_HandleTypeDef *i2c_handle
 	}
 	device->i2c_is_done = 0;
 	device->i2c_is_error = 0;
-
-	/* TODO: FINISH THE REST OF THIS */
 
 	return 0;
 }
