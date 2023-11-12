@@ -17,9 +17,9 @@
 #include "stm32h7xx_hal.h"
 
 /* i2c constants---> THIS STILL NEEDS TO BE FIXED*/
-#define FC_ADXL375_I2C_DEVICE_ID     0x1Du /* (pg. 18) if ALT_ADDRESS pin is low, these change */
-#define FC_ADXL375_I2C_WRITE_ADDRESS 0x3Au
-#define FC_ADXL375_I2C_READ_ADDRESS  0x3Bu
+#define FC_MS5607_I2C_DEVICE_ID     0x77u /* CSB pulled low, so CSB bit is set to 1 */
+#define FC_MS5607_I2C_WRITE_ADDRESS 0xEEu
+#define FC_MS5607_I2C_READ_ADDRESS  0xEFu
 
 /* constants (pg. 10)
  * These are updated for ms5067*/
