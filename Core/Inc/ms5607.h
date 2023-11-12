@@ -38,6 +38,14 @@
 #define FC_MS5607_CONSTANT_ADC_READ    				0x00u
 #define FC_MS5607_CONSTANT_PROM_READ				0xA0u
 
+/* PROM addresses for conversion constants C1-C6 */
+#define FC_MS5607_CONSTANT_PROM_READC1				0xA2u // Pressure sensitivity
+#define FC_MS5607_CONSTANT_PROM_READC2				0xA4u // Pressure offset
+#define FC_MS5607_CONSTANT_PROM_READC3				0xA6u // Temperature coefficient of pressure sensitivity
+#define FC_MS5607_CONSTANT_PROM_READC4				0xA8u // Temperature coefficient of pressure offset
+#define FC_MS5607_CONSTANT_PROM_READC5				0xAAu // Reference Temperature
+#define FC_MS5607_CONSTANT_PROM_READC6				0xACu // Temperature coefficient of the temperature
+
 /* struct */
 
 struct fc_adxl375 {

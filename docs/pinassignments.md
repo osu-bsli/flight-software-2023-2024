@@ -11,7 +11,7 @@
 - I2C1 + a gpio input as a data ready interrupt
 
 ### imu (BMI323)
-- SPI1 + a gpio input as a data ready interrupt
+- I2C1 + a gpio input as a data ready interrupt
 
 ### barometer (MS5607) (indirectly but still over I2C)
 - I2C1
@@ -23,8 +23,7 @@
 - USART6 + SPI4 + the SPI4_NSS pin (we may configure it as a gpio output instead, apparently it may be more reliable)
 
 ### Inter-board communication
-- FDCAN2 (NO)
-- UART?
+- UART8
 
 ### Airbrakes
 - stepper motor driver:
@@ -46,18 +45,13 @@
 - PB7 = I2C1_SDA
 - PB6 = I2C1_SCL
 - PB5 = GPIO_IN_ADXL375_DATAREADY
+- PB3 = GPIO_IN_BMI323_DATAREADY
 
 ### I2C2 (other sensors)
 - PF0 = I2C2_SDA
 - PF1 = I2C2_SCL
 - PF2 = GPIO_IN_MAXM8C_DATAREADY
 - PF3 = GPIO_IN_BMI1422AGMV_DATAREADY
-
-### SPI1 (other sensors)
-- PA5 = SPI1_SCK
-- PA6 = SPI1_MISO
-- PA7 = SPI1_MOSI
-- PC4 = GPIO_IN_BMI323_DATAREADY
 
 ### SD card
 - PE2 = SPI4_SCK
@@ -82,8 +76,8 @@
   - PF15 = I2C4_SDA
 
 ### Inter-board communication
-- PB13 = FDCAN2_TX
-- PB12 = FDCAN2_RX
+- PE1 = UART8_TX
+- PE0 = UART8_RX
 
 ### Debugging
 - PA14 = DEBUG_JTCK-SWCLK

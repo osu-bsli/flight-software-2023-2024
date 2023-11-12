@@ -13,6 +13,8 @@
   - Write Address: 0x3A
 
 ## imu (BMI323)
+- [datasheet](https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmi323-ds000.pdf)
+- 
 
 ## barometer (MS5607) (indirectly but still over I2C)
 - [datasheet](https://www.te.com/commerce/DocumentDelivery/DDEController?Action=showdoc&DocId=Data+Sheet%7FMS5607-02BA03%7FB4%7Fpdf%7FEnglish%7FENG_DS_MS5607-02BA03_B4.pdf%7FMS560702BA03-50)
