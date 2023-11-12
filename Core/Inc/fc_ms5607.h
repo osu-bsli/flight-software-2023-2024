@@ -29,11 +29,11 @@
 #define FC_MS5607_CONSTANT_CONVERTD1_OSR1024        0x44u
 #define FC_MS5607_CONSTANT_CONVERTD1_OSR2048        0x46u
 #define FC_MS5607_CONSTANT_CONVERTD1_OSR4096        0x48u
-#define FC_MS5607_CONSTANT_CONVERTD1_OSR256         0x50u
-#define FC_MS5607_CONSTANT_CONVERTD1_OSR512         0x52u
-#define FC_MS5607_CONSTANT_CONVERTD1_OSR1024        0x54u
-#define FC_MS5607_CONSTANT_CONVERTD1_OSR2048     	0x56u
-#define FC_MS5607_CONSTANT_CONVERTD1_OSR4096      	0x58u
+#define FC_MS5607_CONSTANT_CONVERTD2_OSR256         0x50u
+#define FC_MS5607_CONSTANT_CONVERTD2_OSR512         0x52u
+#define FC_MS5607_CONSTANT_CONVERTD2_OSR1024        0x54u
+#define FC_MS5607_CONSTANT_CONVERTD2_OSR2048     	0x56u
+#define FC_MS5607_CONSTANT_CONVERTD2_OSR4096      	0x58u
 #define FC_MS5607_CONSTANT_ADC_READ    				0x00u
 #define FC_MS5607_CONSTANT_PROM_READ				0xA0u
 
@@ -47,21 +47,23 @@
 
 /* struct */
 
-struct fc_adxl375 {
-	 I2C_HandleTypeDef *i2c_handle;
+struct fc_ms5607 {
+	 I2C_HandleTypeDef *i2c_handle; /* the i2c peripheral */
+	 int *i2c_owner;                /* pointer to variable tracking who is using the i2c peripheral */
+	 int i2c_is_done;               /* i2c completion or error interrupt will set this to true, false otherwise */
+	 int i2c_is_error;              /* i2c error interrupt will set this to true, false otherwise */
 
-	 float acceleration_x;
-	 float acceleration_y;
-	 float acceleration_z;
+	 float pressure_mbar; /* pressure in mbar */
+	 float temperture_c; /* temperature in degrees Celsius */
 };
 
 /* functions */
-int adxl375_initialize(struct fc_adxl375 *device, I2C_HandleTypeDef *i2c_handle);
-int adxl375_process(struct fc_adxl375 *device);
+int ms5607_initialize(struct fc_adxl375 *device, I2C_HandleTypeDef *i2c_handle);
+int ms5607_process(struct fc_adxl375 *device);
 
-HAL_StatusTypeDef fc_adxl375_readregister(struct fc_adxl375 *device, uint8_t reg, uint8_t *data);
-HAL_StatusTypeDef fc_adxl375_readregisters(struct fc_adxl375 *device, uint8_t reg, uint8_t *data, uint8_t length);
-HAL_StatusTypeDef fc_adxl375_writeregister(struct fc_adxl375 *device, uint8_t reg, uint8_t *data);
+HAL_StatusTypeDef fc_ms5607_readregister(struct fc_adxl375 *device, uint8_t reg, uint8_t *data);
+HAL_StatusTypeDef fc_ms5607_readregisters(struct fc_adxl375 *device, uint8_t reg, uint8_t *data, uint8_t length);
+HAL_StatusTypeDef fc_ms5607_writeregister(struct fc_adxl375 *device, uint8_t reg, uint8_t *data);
 
 #endif /* INC_FC_MS5607_H_ */
 
