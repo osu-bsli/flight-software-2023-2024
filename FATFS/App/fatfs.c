@@ -25,17 +25,6 @@ FIL SDFile;       /* File object for SD */
 
 /* USER CODE BEGIN Variables */
 
-// SD Card Var for FATFS
-extern char SDPath[4];   /* SD logical drive path */
-extern FATFS SDFatFS;    /* File system object for SD logical drive */
-extern FIL SDFile;       /* File object for SD */
-
-
-// File IO Var
-FRESULT res;                                          /* FatFs function common result code */
-uint32_t byteswritten, bytesread;                     /* File write/read counts */
-uint8_t wtext[] = "Hello from Peter :), SDIO DMA RTOS"; 		  /* File write buffer */
-uint8_t rtext[100];                                   /* File read buffer */
 /* USER CODE END Variables */
 
 void MX_FATFS_Init(void)
