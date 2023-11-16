@@ -26,6 +26,8 @@
 #include "fc_adxl375.h"
 #include <stdio.h>
 #include <string.h>
+#include "ff.h"
+#include "fatfs.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -717,7 +719,7 @@ PUTCHAR_PROTOTYPE
 {
   /* Place your implementation of fputc here */
   /* e.g. write a character to the EVAL_COM1 and Loop until the end of transmission */
-  HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, 0xFFFF);
+  HAL_UART_Transmit(&huart6, (uint8_t *)&ch, 1, 0xFFFF);
 
   return ch;
 }
@@ -731,6 +733,20 @@ PUTCHAR_PROTOTYPE
   * @retval None
   */
 /* USER CODE END Header_startSensorTask */
+
+// SD Card Var for FATFS
+
+/// ToDo: Check if these work with or without extern
+char SDPath[4];   /* SD logical drive path */
+FATFS SDFatFS;    /* File system object for SD logical drive */
+FIL SDFile;       /* File object for SD */
+
+// File IO Var
+FRESULT res;                                          /* FatFs function common result code */
+uint32_t byteswritten, bytesread;                     /* File write/read counts */
+uint8_t wtext[] = "Hello from Peter :), SDIO DMA RTOS"; 		  /* File write buffer */
+uint8_t rtext[100];                                   /* File read buffer */
+
 void startSensorTask(void *argument)
 {
   /* USER CODE BEGIN 5 */
