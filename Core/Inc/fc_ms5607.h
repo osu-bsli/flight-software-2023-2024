@@ -45,6 +45,12 @@
 #define FC_MS5607_CONSTANT_PROM_READC5				0xAAu // Reference Temperature
 #define FC_MS5607_CONSTANT_PROM_READC6				0xACu // Temperature coefficient of the temperature
 
+/* Max and min reading values to check validity of data collected */
+#define FC_MS5607_CONSTANT_PRESSURE_MIN				10.0f //minimun pressure is 10mbar
+#define FC_MS5607_CONSTANT_PRESSURE_MAX				1200.0f //minimun pressure is 10mbar
+#define FC_MS5607_CONSTANT_TEMPERATURE_MIN			-40.0f //minimun temperature is -40 degrees Celsius
+#define FC_MS5607_CONSTANT_TEMPERATURE_MAX			85.0f //maximum temperature is 85 degrees Celsius
+
 /* struct */
 
 struct fc_ms5607 {
