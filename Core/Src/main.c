@@ -19,26 +19,20 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
+#include "fatfs.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "fc_common.h"
 #include "fc_adxl375.h"
-#include <stdio.h>
-#include <string.h>
 #include "ff.h"
 #include "fatfs.h"
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-#ifdef __GNUC__
-  /* With GCC, small printf (option LD Linker->Libraries->Small printf
-     set to 'Yes') calls __io_putchar() */
-  #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
-#else
-  #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
-#endif /* __GNUC__ */
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -203,6 +197,7 @@ int main(void)
   MX_ADC3_Init();
   MX_UART8_Init();
   MX_SDMMC1_SD_Init();
+  MX_FATFS_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -541,10 +536,6 @@ static void MX_SDMMC1_SD_Init(void)
   hsd1.Init.BusWide = SDMMC_BUS_WIDE_4B;
   hsd1.Init.HardwareFlowControl = SDMMC_HARDWARE_FLOW_CONTROL_DISABLE;
   hsd1.Init.ClockDiv = 0;
-  if (HAL_SD_Init(&hsd1) != HAL_OK)
-  {
-    Error_Handler();
-  }
   /* USER CODE BEGIN SDMMC1_Init 2 */
 
   /* USER CODE END SDMMC1_Init 2 */
@@ -698,6 +689,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : GPIO_IN_FATFS_DETECTSDIO_Pin */
+  GPIO_InitStruct.Pin = GPIO_IN_FATFS_DETECTSDIO_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIO_IN_FATFS_DETECTSDIO_GPIO_Port, &GPIO_InitStruct);
+
   /*Configure GPIO pin : GPIO_EXTI15_BMI1422AGMV_DATAREADY_Pin */
   GPIO_InitStruct.Pin = GPIO_EXTI15_BMI1422AGMV_DATAREADY_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
@@ -715,14 +712,18 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-PUTCHAR_PROTOTYPE
-{
-  /* Place your implementation of fputc here */
-  /* e.g. write a character to the EVAL_COM1 and Loop until the end of transmission */
-  HAL_UART_Transmit(&huart6, (uint8_t *)&ch, 1, 0xFFFF);
 
-  return ch;
-}
+/* see https://www.youtube.com/watch?v=sVgKUhkwnAQ */
+/* see https://community.st.com/t5/stm32-mcus/how-to-create-a-file-system-on-a-sd-card-using-stm32cubeide/ta-p/49830 */
+extern char SDPath[4];   /* SD logical drive path */
+extern FATFS SDFatFS;    /* File system object for SD logical drive */
+extern FIL SDFile;       /* File object for SD */
+
+FRESULT res;                       /* fatfs status code */
+uint32_t byteswritten;             /* file write count */
+uint32_t bytesread;                /* file read count */
+uint8_t wtext[] = "Hello, world!"; /* file write buffer */
+uint8_t rtext[100];                /* file read buffer */
 
 /* USER CODE END 4 */
 
@@ -733,54 +734,44 @@ PUTCHAR_PROTOTYPE
   * @retval None
   */
 /* USER CODE END Header_startSensorTask */
-
-// SD Card Var for FATFS
-
-/// ToDo: Check if these work with or without extern
-char SDPath[4];   /* SD logical drive path */
-FATFS SDFatFS;    /* File system object for SD logical drive */
-FIL SDFile;       /* File object for SD */
-
-// File IO Var
-FRESULT res;                                          /* FatFs function common result code */
-uint32_t byteswritten, bytesread;                     /* File write/read counts */
-uint8_t wtext[] = "Hello from Peter :), SDIO DMA RTOS"; 		  /* File write buffer */
-uint8_t rtext[100];                                   /* File read buffer */
-
 void startSensorTask(void *argument)
 {
   /* USER CODE BEGIN 5 */
-  // 1. Mount - 0
+  /* mount SD card (blocks until success) */
   f_mount(&SDFatFS, (TCHAR const*)SDPath, 0);
 
-  // TEST Write operation
-  // 2. Open file for writing
-  if(f_open(&SDFile, "F7FILE1.TXT", FA_CREATE_ALWAYS | FA_WRITE) != FR_OK) {
-	  printf("Failed to open write file\r\n");
+  /* test writing to a file */
+  if(f_open(&SDFile, "LOG.TXT", FA_CREATE_ALWAYS | FA_WRITE) != FR_OK) {
+	  /* filed to open file */
   } else {
-	  printf("Opened write file successfully\r\n");
-	  // Write data to text file
+	  /* write data */
 	  res = f_write(&SDFile, wtext, strlen((char *)wtext), (void *)&byteswritten);
 	  if((byteswritten == 0) || (res != FR_OK)) {
-		  printf("Failed to write file!\r\n");
+		  /* failed to write to file */
 	  } else {
-		  printf("File written successfully\r\n");
-		  printf("Write Content: %s\r\n", wtext);
+		/* success! */
+//		  printf("File written successfully\r\n");
+//		  printf("Write Content: %s\r\n", wtext);
 	  }
 	  f_close(&SDFile);
   }
 
-  // Test read file
-  f_open(&SDFile, "F7FILE1.TXT",  FA_READ);
-	memset(rtext,0,sizeof(rtext));
-	res = f_read(&SDFile, rtext, sizeof(rtext), (UINT*)&bytesread);
-	if((bytesread == 0) || (res != FR_OK)) {
-		printf("Failed to read file!\r\n");
-	} else {
-		printf("File read successfully\r\n");
-		printf("File content: %s\r\n", (char *)rtext);
-	}
-	f_close(&SDFile);
+  /* test reading from a file */
+  if (f_open(&SDFile, "LOG.TXT",  FA_READ) != FR_OK) {
+	  /* failed to open file */
+  } else {
+	  /* read data */
+	  memset(rtext,0,sizeof(rtext));
+	  res = f_read(&SDFile, rtext, sizeof(rtext), (UINT*)&bytesread);
+	  if((bytesread == 0) || (res != FR_OK)) {
+		  /* failed to read from file */
+	  } else {
+		  /* success! */
+//		printf("File read successfully\r\n");
+//		printf("File content: %s\r\n", (char *)rtext);
+	  }
+	  f_close(&SDFile);
+  }
 
   /* Infinite loop */
   for(;;)

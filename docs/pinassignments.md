@@ -23,7 +23,7 @@
 - I2C2
 
 ### SD card (over SPI)
-- USART6 + SDMMC1
+- USART6 + SDMMC1 + a gpio input for FATFS "Detect_SDIO"
 
 ### Inter-board communication
 - UART8
@@ -65,6 +65,7 @@
 - PD2 = SDMMC_CMD
 - PC7 = USART6_RX
 - PC6 = USART6_TX
+- PD1 = GPIO_IN_FATFS_DETECTSDIO
 
 ### Airbrakes
 - stepper motor driver pins:
