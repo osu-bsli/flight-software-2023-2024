@@ -811,6 +811,38 @@ void startAirbrakeTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
+	/* ~~~ Data Processing ~~~ */
+	// Get process data struct
+
+	/* ~~~ Flight Stage Detection ~~~ */
+	// Get flight stage
+
+	/* ~~~ Airbrake Control ~~~ */
+	/* Pre pad */
+	// Initialization, testing of air brakes
+
+	/* Pad */
+	// Do nothing
+
+	/* Boost */
+	// Do nothing
+
+	/* Coast */
+	// Do nothing
+
+	/* Control */
+	// Control stepper motor
+
+	/* Droque */
+	// Delpoy drogue
+	// Retract air brakes
+
+	/* Main */
+	// Deploy main
+
+	/* Landed */
+	// Do nothing
+
     osDelay(1);
   }
   /* USER CODE END startAirbrakeTask */
