@@ -32,8 +32,8 @@ int ms5607_initialize(struct fc_ms5607 *device, I2C_HandleTypeDef *i2c_handle) {
 
 	/* Initiate reset sequence to calibrate PROM */
 
-	int status = ms5607_reset();
-	if(status != FC_STATUS_SUCCESS){
+	int reset_status = ms5607_reset(device);
+	if(reset_status != FC_STATUS_SUCCESS){
 		return FC_STATUS_ERROR;
 	}
 
@@ -43,22 +43,26 @@ int ms5607_initialize(struct fc_ms5607 *device, I2C_HandleTypeDef *i2c_handle) {
 
 /* Reset command for barometer */
 /* Return Status */
-int ms5607_reset() {
+int ms5607_reset(struct fc_ms5607 *device) {
 	/* Send reset command */
 
 	// Write reset command
+	uint8_t* data = FC_MS5607_CONSTANT_RESET;
+	int reset_status = fc_ms5607_send_command(device, FC_MS5607_I2C_WRITE_ADDRESS, data, FC_8BIT_COMMAND_SIZE, FC_MS5607_I2C_TIMEOUT);
+	if(reset_status != FC_STATUS_SUCCESS){
+			return FC_STATUS_ERROR;
+	}
 
-	HAL_StatusTypeDef reset_status = fc_ms5607_writeregister(struct fc_ms5607 *device, uint8_t reg, uint8_t *data);
-
-	/* Must read PROM once after a reset occurs */
+	/* Must read PROM once after a reset occurs - maybe?*/
+	//int read_status = ms5607_read_prom(device);
 
 }
 
-// TODO: write read prom
+/* Prom read sequence. Reads C1-C6  - NOT SURE IF THIS IS NECESSARY */
+int ms5607_read_prom(struct fc_ms5607 *device){
+	/* PROM Read command consists of two parts */
 
-/* Prom read sequence. Reads C1-C6  */
-int ms5607_read_PROM(){
-
+	/* First command sets up the system into PROM read mode */
 
 }
 
@@ -108,6 +112,7 @@ HAL_StatusTypeDef fc_ms5607_readregisters(struct fc_ms5607 *device, uint8_t reg,
 	return HAL_I2C_Mem_Read(device->i2c_handle, FC_MS5607_I2C_DEVICE_ID, reg, sizeof(reg), data, length, 100);
 }
 
-HAL_StatusTypeDef fc_ms5607_writeregister(struct fc_ms5607 *device, uint8_t reg, uint8_t *data) {
-	return HAL_I2C_Mem_Write(device->i2c_handle, FC_MS5607_I2C_DEVICE_ID_WRITE, reg, sizeof(reg), data, sizeof(data), 100);
+/* Double check all data + data lengths */
+HAL_StatusTypeDef fc_ms5607_send_command(struct fc_ms5607 *device, uint16_t addr, uint8_t *data, uint16_t size, uint32_t timeout) {
+	return HAL_I2C_Master_Transmit(device->i2c_handle, addr, data, sizeof(data), timeout);
 }
