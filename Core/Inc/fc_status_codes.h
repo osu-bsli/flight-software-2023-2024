@@ -10,9 +10,11 @@
 
 /* Universal Statuses for all drivers */
 
-#define FC_STATUS_SUCCESS	 	0
-#define FC_STATUS_ERROR 		1
-#define FC_STATUS_TIMEOUT	 	2
-#define FC_STATUS_INVALID DATA 	1
+typedef enum{
+	FC_STATUS_SUCCESS = 0x00,
+	FC_STATUS_ERROR = 0x01,
+	FC_STATUS_TIMEOUT = 0x02,
+	FC_STATUS_INVALID_DATA = 0x03
+} FC_STATUS;
 
 #endif /* INC_FC_STATUS_CODES_H_ */

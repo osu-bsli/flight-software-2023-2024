@@ -71,14 +71,14 @@ struct fc_ms5607 {
 };
 
 /* functions */
-int ms5607_initialize(struct fc_ms5607 *device, I2C_HandleTypeDef *i2c_handle);
-int ms5607_reset(struct fc_ms5607 *device);
-int ms5607_read_prom(struct fc_ms5607 *device);
-int ms5607_process(struct fc_ms5607 *device);
+FC_STATUS ms5607_initialize(struct fc_ms5607 *device, I2C_HandleTypeDef *i2c_handle);
+FC_STATUS ms5607_reset(struct fc_ms5607 *device);
+FC_STATUS ms5607_read_prom(struct fc_ms5607 *device);
+FC_STATUS ms5607_process(struct fc_ms5607 *device);
 
-HAL_StatusTypeDef fc_ms5607_readregister(struct fc_ms5607 *device, uint8_t reg, uint8_t *data);
-HAL_StatusTypeDef fc_ms5607_readregisters(struct fc_ms5607 *device, uint8_t reg, uint8_t *data, uint8_t length);
-HAL_StatusTypeDef fc_ms5607_send_command(struct fc_ms5607 *device, uint16_t addr, uint8_t *data, uint16_t size, uint32_t timeout);
+FC_STATUS fc_ms5607_readregister(struct fc_ms5607 *device, uint8_t reg, uint8_t *data);
+FC_STATUS fc_ms5607_readregisters(struct fc_ms5607 *device, uint8_t reg, uint8_t *data, uint8_t length);
+FC_STATUS fc_ms5607_send_write_command(struct fc_ms5607 *device, uint16_t addr, uint8_t *data, uint16_t size, uint32_t timeout);
 
 #endif /* INC_FC_MS5607_H_ */
 
