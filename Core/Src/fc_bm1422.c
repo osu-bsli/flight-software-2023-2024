@@ -35,12 +35,11 @@ int fc_bm1422_initialize(struct fc_bm1422 *device, I2C_HandleTypeDef *i2c_handle
 		return 42;
 	}
 
-	/* TODO: Replace "5" with I2C Register Device ID */
-	if (data != 5) {
+	if (data != FC_BM1422_I2C_ADDRESS) {
 		return 255;
 	}
 
-	/* wait under i2c read is complete */
+	/* wait until i2c read is complete */
 	while (!device->i2c_is_done) {
 		osDelay(10);
 	}

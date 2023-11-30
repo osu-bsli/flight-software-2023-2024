@@ -10,9 +10,8 @@
 
 #include "stm32h7xx_hal.h"
 
-// i2c constants (pg. 9-10)
-#define FC_BM1422_I2C_LOW		0x0Eu		     // NOT bit-shifted
-#define FC_BM1422_I2C_HIGH		0x0Fu			 // NOT bit-shifted
+/* i2c constants (pg. 10) */
+#define FC_BM1422_I2C_ADDRESS			 0x0Eu	 // There is a low and high address.
 
 // Register constants (pg. 10)
 #define FC_BM1422_REGISTER_INFORMATION	  0x0D   // LSB
