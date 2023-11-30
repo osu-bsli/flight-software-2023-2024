@@ -75,8 +75,55 @@ int fc_bm1422_initialize(struct fc_bm1422 *device, I2C_HandleTypeDef *i2c_handle
 	return 0;
 }
 
-/* TODO: finish function body */
+/* TODO: Finish function body */
 int fc_bm1422_process(struct fc_bm1422 *device) {
+
+	/* Array for six output data registers (Pg. 12) */
+	uint8_t data[6];
+
+	/* tell interrupt handler that this device is using the peripheral */
+	*device->i2c_owner = FC_I2C_OWNER_FC_BM1422;
+
+	/* Begin i2c read */
+	HAL_StatusTypeDef status = fc_bm1422_readregisters(device, FC_BM1422_REGISTER_DATA_X, data, sizeof(data));
+	if (status != HAL_OK) {
+		return 255;
+	}
+
+	/* Wait until i2c read is complete */
+	while (!device->i2c_is_done) {
+		osDelay(10);
+	}
+	if (device->i2c_is_error) {
+		return 255;
+	}
+
+	/* Reset */
+	device->i2c_is_done = 0;
+	device->i2c_is_error = 0;
+
+	/* CONVERT DATA BYTES TO SIGNED 16-BIT VALUES */
+	union {
+		uint8_t bytes[2];
+		int16_t value;
+	} converter;
+
+	converter.bytes[0] = data[0];
+	converter.bytes[1] = data[1];
+	int16_t raw_outputDataX = converter.value;
+
+	converter.bytes[0] = data[2];
+	converter.bytes[1] = data[3];
+	int16_t raw_outputDataY = converter.value;
+
+	converter.bytes[0] = data[4];
+	converter.bytes[1] = data[5];
+	int16_t raw_outputDataZ = converter.value;
+
+	/* Process raw data */
+	device->x_data = (float) raw_outputDataX;
+	device->y_data = (float) raw_outputDataY;
+	device->z_data = (float) raw_outputDataZ;
 
 	return 0;
 }
