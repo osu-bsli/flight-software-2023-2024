@@ -33,6 +33,7 @@
   - 8 gpio outputs
 - stepper motor encoder:
   - I2C4
+  - ADC1 (3 pins in "single-ended mode)
 
 ### Ematch continuity testing
 - ADC3 (3 pins in "single-ended" mode)
@@ -80,6 +81,8 @@
 - stepper motor encoder pins:
   - PF14 = I2C4_SCL
   - PF15 = I2C4_SDA
+  - PF11 = ADC1_INP2
+  - PA6 = ADC1_INP3
 
 ### Inter-board communication
 - PE1 = UART8_TX
