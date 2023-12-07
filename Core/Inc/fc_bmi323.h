@@ -94,21 +94,24 @@ struct fc_bmi323 {
 	 int i2c_is_error;              /* i2c error interrupt will set this to true, false otherwise */
 
 	 /* datasheet pg. 22 */
-	 float acceleration_x;
+	 float acceleration_x; /* in Gs */
 	 float acceleration_y;
 	 float acceleration_z;
 	 int acceleration_x_is_overflow; /* 1 if overflow (saturated), 0 if not */
 	 int acceleration_y_is_overflow;
 	 int acceleration_z_is_overflow;
+	 uint32_t acceleration_timestamp; /* in kernel ticks */
 
-	 float gyroscope_x;
+	 float gyroscope_x; /* in degrees per second */
 	 float gyroscope_y;
 	 float gyroscope_z;
 	 int gyroscope_x_is_overflow;
 	 int gyroscope_y_is_overflow;
 	 int gyroscope_z_is_overflow;
+	 uint32_t gyroscope_timestamp; /* in kernel ticks */
 
 	 float temperature;
+	 uint32_t temperature_timestamp; /* in kernel ticks */
 
 	 float time; /* sensor keeps timestamps for measurements (datasheet pg. 25) */
 };
@@ -117,17 +120,18 @@ struct fc_bmi323 {
 int fc_bmi323_initialize(struct fc_bmi323 *device, I2C_HandleTypeDef *i2c_handle, int *i2c_owner);
 int fc_bmi323_process(struct fc_bmi323 *device);
 
-/* Starts reading 1 byte from a register.
- * The value won't be ready until the HAL_I2C_MemTxCpltCallback() interrupt handler is called. */
-HAL_StatusTypeDef fc_bmi323_readregister(struct fc_bmi323 *device, uint8_t reg, uint8_t *data);
-
-/* Starts reading multiple bytes from a register.
+/* Starts reading multiple bytes starting from a register (useful for batch reading from multiple
+ * contiguous registers at once).
  * Use this to read multiple contiguous registers in one go (aka "burst mode").
+ * 2 dummy bytes will be received before any actual data, so the buffer should be 2 bytes larger
+ * than the total amount of data expected and the first 2 bytes written to the buffer should be
+ * ignored (datasheet pg. 218).
  * The value won't be ready until the HAL_I2C_MemTxCpltCallback() interrupt handler is called. */
 HAL_StatusTypeDef fc_bmi323_readregisters(struct fc_bmi323 *device, uint8_t reg, uint8_t *data, uint8_t length);
 
-/* Starts writing 1 byte to a register.
+/* Starts writing multiple bytes starting from a register (useful for batch writing to multiple
+ * contiguous registers at once).
  * The value won't be ready until the HAL_I2C_MemRxCpltCallback() interrupt handler is called. */
-HAL_StatusTypeDef fc_bmi323_writeregister(struct fc_bmi323 *device, uint8_t reg, uint8_t *data);
+HAL_StatusTypeDef fc_bmi323_writeregisters(struct fc_bmi323 *device, uint8_t reg, uint8_t *data, uint8_t length);
 
 #endif /* INC_FC_BMI323_H_ */
