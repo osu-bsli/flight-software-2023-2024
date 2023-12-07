@@ -28,19 +28,17 @@ int fc_bm1422_initialize(struct fc_bm1422 *device, I2C_HandleTypeDef *i2c_handle
 	/* tell interrupt handler that we're using the i2c peripheral */
 	*device->i2c_owner = FC_I2C_OWNER_FC_BM1422;
 
-	/* start i2c read with a 2-byte Batch Read */
+	/* start I2C read with a 2-byte Batch Read */
 	/* Use the FIRST Device Address for the batch read */
 	status = fc_bm1422_readregisters(device, FC_BM1422_REGISTER_INFORMATION, &data, 2);
 	if (status != HAL_OK) {
 		return 42;
 	}
-
-	/* TODO: Replace "5" with I2C Register Device ID */
-	if (data != 5) {
+	if (data != FC_BM1422_I2C_DEVICE_ID) {
 		return 255;
 	}
 
-	/* wait under i2c read is complete */
+	/* wait until i2c read is complete */
 	while (!device->i2c_is_done) {
 		osDelay(10);
 	}
@@ -76,22 +74,66 @@ int fc_bm1422_initialize(struct fc_bm1422 *device, I2C_HandleTypeDef *i2c_handle
 	return 0;
 }
 
-/* TODO: finish function body */
 int fc_bm1422_process(struct fc_bm1422 *device) {
+
+	/* Array for six output data registers (Pg. 12) */
+	uint8_t data[6];
+
+	/* tell interrupt handler that this device is using the peripheral */
+	*device->i2c_owner = FC_I2C_OWNER_FC_BM1422;
+
+	/* Begin i2c read */
+	HAL_StatusTypeDef status = fc_bm1422_readregisters(device, FC_BM1422_REGISTER_DATA_X, data, sizeof(data));
+	if (status != HAL_OK) {
+		return 255;
+	}
+
+	/* Wait until i2c read is complete */
+	while (!device->i2c_is_done) {
+		osDelay(10);
+	}
+	if (device->i2c_is_error) {
+		return 255;
+	}
+
+	/* Reset */
+	device->i2c_is_done = 0;
+	device->i2c_is_error = 0;
+
+	/* CONVERT DATA BYTES TO SIGNED 16-BIT VALUES */
+	union {
+		uint8_t bytes[2];
+		int16_t value;
+	} converter;
+
+	converter.bytes[0] = data[0];
+	converter.bytes[1] = data[1];
+	int16_t raw_outputDataX = converter.value;
+
+	converter.bytes[0] = data[2];
+	converter.bytes[1] = data[3];
+	int16_t raw_outputDataY = converter.value;
+
+	converter.bytes[0] = data[4];
+	converter.bytes[1] = data[5];
+	int16_t raw_outputDataZ = converter.value;
+
+	/* Process raw data */
+	device->x_data = (float) raw_outputDataX;
+	device->y_data = (float) raw_outputDataY;
+	device->z_data = (float) raw_outputDataZ;
 
 	return 0;
 }
 
-/* TODO: replace "0" with equivalent of device ID for the magnometer */
-
 HAL_StatusTypeDef fc_bm1422_readregister(struct fc_bm1422 *device, uint8_t reg, uint8_t *data) {
-	return HAL_I2C_Mem_Read_IT(device->i2c_handle, 0, reg, sizeof(reg), data, sizeof(data));
+	return HAL_I2C_Mem_Read_IT(device->i2c_handle, FC_BM1422_I2C_DEVICE_ID, reg, sizeof(reg), data, sizeof(data));
 }
 
 HAL_StatusTypeDef fc_bm1422_readregisters(struct fc_bm1422 *device, uint8_t reg, uint8_t *data, uint8_t length) {
-	return HAL_I2C_Mem_Read_IT(device->i2c_handle, 0, reg, sizeof(reg), data, length);
+	return HAL_I2C_Mem_Read_IT(device->i2c_handle, FC_BM1422_I2C_DEVICE_ID, reg, sizeof(reg), data, length);
 }
 
 HAL_StatusTypeDef fc_bm1422_writeregister(struct fc_bm1422 *device, uint8_t reg, uint8_t *data) {
-	return HAL_I2C_Mem_Write_IT(device->i2c_handle, 0, reg, sizeof(reg), data, sizeof(data));
+	return HAL_I2C_Mem_Write_IT(device->i2c_handle, FC_BM1422_I2C_DEVICE_ID, reg, sizeof(reg), data, sizeof(data));
 }
